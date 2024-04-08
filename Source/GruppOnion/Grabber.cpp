@@ -31,7 +31,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 	FRotator MyRotation = GetComponentRotation();
 	FString RotationString = MyRotation.ToCompactString();
-	UE_LOG(LogTemp, Display, TEXT("Grabber Rotation: %s"), );
+	UE_LOG(LogTemp, Display, TEXT("Grabber Rotation: %s"), *RotationString);
 	// ...
 }
 
