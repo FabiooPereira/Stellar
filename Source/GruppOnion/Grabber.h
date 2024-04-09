@@ -39,5 +39,4 @@ private:
 	
 	UPROPERTY(EditAnywhere)
 	float HoldDistance = 100;
-
 };

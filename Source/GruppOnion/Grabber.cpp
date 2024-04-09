@@ -56,30 +56,37 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 void UGrabber::Grab()
 {
-	/*
-	if (GrabbedObject == nullptr)
-	{
-		// Check if there's an overlapping object
-		if (HandCollision->GetNumOverlappingComponents() > 0)
-		{
-			// Assuming the first overlapping component is the object to grab
-			UPrimitiveComponent* OverlappingComponent = HandCollision->GetOverlappingComponent(0);
-			if (OverlappingComponent->IsSimulatingPhysics())
-			{
-				// Disable physics simulation for the object
-				OverlappingComponent->SetSimulatePhysics(false);
+	UPhysicsHandleComponent *PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
 
-				// Attach the object to the hand socket
-				GrabbedObject = Cast<AActor>(OverlappingComponent->GetOwner());
-				if (GrabbedObject)
-				{
-					// Attach the object to the hand socket
-					GrabbedObject->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "SocketName");
-				}
-			}
-		}
+	if(PhysicsHandle == nullptr)
+	{
+		return;
 	}
-	*/
+
+	FVector Start = GetComponentLocation();
+	FVector End = Start + GetForwardVector() * MaxGrabDistance;
+
+	DrawDebugLine(GetWorld(), Start, End, FColor::Red);
+	DrawDebugSphere(GetWorld(), End, 10, 10, FColor::Cyan, false, 5);
+
+	FCollisionShape Sphere = FCollisionShape::MakeSphere(GrabRadius);
+	FHitResult HitResult;
+	bool HasHit = GetWorld()->SweepSingleByChannel(HitResult, Start, End, FQuat::Identity, ECC_GameTraceChannel2, Sphere);
+
+	if(HasHit)
+	{
+		FVector ImpactPoint = HitResult.Location - (Start - End).GetSafeNormal() * Sphere.GetSphereRadius();
+		AActor* HitActor = HitResult.GetActor();
+		UE_LOG(LogTemp, Display, TEXT("hit actor: %s"), *HitActor->GetActorNameOrLabel());
+		DrawDebugSphere(GetWorld(), ImpactPoint, 10, 10, FColor::Green, false, 5);
+		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10, 10, FColor::Red, false, 5);
+
+		PhysicsHandle->GrabComponentAtLocationWithRotation(HitResult.GetComponent(), NAME_None, HitResult.ImpactPoint, GetComponentRotation());
+	}else
+	{
+		UE_LOG(LogTemp, Display, TEXT("no actor hit"));
+
+	}
 }
 
 
