@@ -23,11 +23,11 @@ void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UPhysicsHandleComponent* physicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	UPhysicsHandleComponent* PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
 
-	if(physicsHandle != nullptr)
+	if(PhysicsHandle != nullptr)
 	{
-		UE_LOG(LogTemp, Display, TEXT("Got physics handle: %s"), *physicsHandle->GetName());
+		UE_LOG(LogTemp, Display, TEXT("Got physics handle: %s"), *PhysicsHandle->GetName());
 	}else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No physics handle found"));
@@ -49,33 +49,34 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		return;
 	}
 
-	FVector targetLocation = GetComponentLocation() + GetForwardVector() * holdDistance;
-	physicsHandle->SetTargetLocationAndRotation(targetLocation, GetComponentRotation());
+	FVector TargetLocation = GetComponentLocation() + GetForwardVector() * HoldDistance;
+	physicsHandle->SetTargetLocationAndRotation(TargetLocation, GetComponentRotation());
 	// ...
 }
 
 void UGrabber::Grab()
 {
-	UPhysicsHandleComponent* physicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-	if(physicsHandle == nullptr)
+	if (GrabbedObject == nullptr)
 	{
-		return;
-	}
-	
-	FVector start = GetComponentLocation();
-	FVector end = start + GetForwardVector() * maxGrabDistance;
-	DrawDebugLine(GetWorld(), start, end, FColor::Red);
-	DrawDebugSphere(GetWorld(), end, 10, 10, FColor::Blue, false, 5);
-	FCollisionShape Sphere = FCollisionShape::MakeSphere(grabRadius);
-	FHitResult hitResult;
-	bool hasHit = GetWorld()->SweepSingleByChannel(hitResult, start, end, FQuat::Identity, ECC_GameTraceChannel2, Sphere);
+		// Check if there's an overlapping object
+		if (HandCollision->GetNumOverlappingComponents() > 0)
+		{
+			// Assuming the first overlapping component is the object to grab
+			UPrimitiveComponent* OverlappingComponent = HandCollision->GetOverlappingComponent(0);
+			if (OverlappingComponent->IsSimulatingPhysics())
+			{
+				// Disable physics simulation for the object
+				OverlappingComponent->SetSimulatePhysics(false);
 
-	if(hasHit)
-	{
-		DrawDebugSphere(GetWorld(), hitResult.Location, 10, 10, FColor::Green, false, 5);
-		DrawDebugSphere(GetWorld(), hitResult.ImpactPoint, 10, 10, FColor::Red, false, 5);
-
-		physicsHandle->GrabComponentAtLocationWithRotation(hitResult.GetComponent(), NAME_None, hitResult.ImpactPoint, hitResult.GetComponent()->GetComponentRotation());
+				// Attach the object to the hand socket
+				GrabbedObject = Cast<AActor>(OverlappingComponent->GetOwner());
+				if (GrabbedObject)
+				{
+					// Attach the object to the hand socket
+					GrabbedObject->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "SocketName");
+				}
+			}
+		}
 	}
 }
 
