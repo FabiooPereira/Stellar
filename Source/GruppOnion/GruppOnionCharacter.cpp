@@ -10,6 +10,8 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
+
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -80,7 +82,7 @@ void AGruppOnionCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 		// Jumping
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
-
+		
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AGruppOnionCharacter::Move);
 
@@ -128,3 +130,4 @@ void AGruppOnionCharacter::Look(const FInputActionValue& Value)
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
 }
+
