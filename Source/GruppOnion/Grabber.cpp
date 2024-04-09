@@ -56,6 +56,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 void UGrabber::Grab()
 {
+	/*
 	if (GrabbedObject == nullptr)
 	{
 		// Check if there's an overlapping object
@@ -78,6 +79,7 @@ void UGrabber::Grab()
 			}
 		}
 	}
+	*/
 }
 
 

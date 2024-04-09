@@ -40,5 +40,4 @@ private:
 	UPROPERTY(EditAnywhere)
 	float HoldDistance = 100;
 
-	Aactor* GrabbedObject;
 };
