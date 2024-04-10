@@ -1,6 +1,9 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "GruppOnionCharacter.h"
+
+#include "AICompanionController.h"
+#include "AlpacaMovement.h"
 #include "Engine/LocalPlayer.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -10,6 +13,9 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "Kismet/GameplayStatics.h"
+#include "DrawDebugHelpers.h"
+#include "Engine/World.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -52,6 +58,7 @@ AGruppOnionCharacter::AGruppOnionCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+	
 }
 
 void AGruppOnionCharacter::BeginPlay()
@@ -67,6 +74,23 @@ void AGruppOnionCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+	//Find reference to Companion(tag) and sets its controller to currentAIController;
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(),FName("AICompanion"), FoundActors);
+	if(FoundActors.Num()>0)
+	{
+		AActor* AICompanionActor= FoundActors[0];
+		CurrentCompanion = AICompanionActor;
+		AAICompanionController* CompanionController = Cast<AAICompanionController>(AICompanionActor->GetInstigatorController());
+		if(CompanionController)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Succes"));
+			CurrentAIController = CompanionController;
+		}
+	}
+	
+	
+	
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -127,4 +151,100 @@ void AGruppOnionCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+	
 }
+//---------------------------CompanionCalls---------------------------------------//
+void AGruppOnionCharacter::StayCompanion()
+{
+	if (CurrentAIController)
+	{
+		CurrentAIController->StopFollowPlayer();
+	}
+	else
+	{
+		UE_LOG(LogTemp,Warning,TEXT("NUllptr"));
+	}
+	
+}
+void AGruppOnionCharacter::CallCompanion()
+{
+	
+	if (CurrentAIController)
+	{
+	CurrentAIController->ContinueFollowPlayer();
+	}else
+	{
+		UE_LOG(LogTemp,Warning,TEXT("NUllptr"));
+	}
+	
+}
+void AGruppOnionCharacter::setCompanion(AAlpacaMovement* NewCompanion)
+{
+	//CurrentCompanion = NewCompanion;
+}
+///////////////////////////////////////////////
+
+void AGruppOnionCharacter::DrawDebugLineToCompanion()
+{
+	if(CurrentCompanion)
+	{
+		FVector PlayerLocation = GetActorLocation();
+
+		FVector CompanionLocation = CurrentCompanion->GetActorLocation();
+
+		DrawDebugLine(
+			GetWorld(),
+			PlayerLocation,
+			CompanionLocation,
+			FColor::Green,
+			false,
+			2.0f,
+			0,
+			5.0f
+			);
+	}
+}
+
+///////////////////////////////////////////////optional
+void AGruppOnionCharacter::MarkTargetPosition(float MaxTraceDistance)
+{
+	FVector TargetPosition = CaptureTargetLocation(MaxTraceDistance);
+}
+FVector AGruppOnionCharacter::CaptureTargetLocation(float MaxTraceDistance)
+{
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (!PlayerController)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Player controller not found."));
+		return FVector::ZeroVector;
+	}
+	// Get the camera location and rotation
+	FVector CameraLocation;
+	FRotator CameraRotation;
+	PlayerController->GetPlayerViewPoint(CameraLocation, CameraRotation);
+	FVector EndLocation = CameraLocation + (CameraRotation.Vector() * MaxTraceDistance);
+
+	// Perform a trace to capture the target location
+	FHitResult HitResult;
+	FCollisionQueryParams TraceParams;
+	TraceParams.bTraceComplex = true;
+	TraceParams.AddIgnoredActor(this); // Ignore the player character
+	if (GetWorld()->LineTraceSingleByChannel(HitResult, CameraLocation, EndLocation, ECC_Visibility, TraceParams))
+	{
+		// Target location captured successfully
+		FVector TargetPosition = HitResult.ImpactPoint;
+
+		// Draw debug line from player's viewpoint to target position
+		DrawDebugLine(GetWorld(), CameraLocation, TargetPosition, FColor::Green, false, 2.0f, 0, 2.0f);
+		return HitResult.ImpactPoint;
+	}
+	else
+	{
+		// No valid target location found
+		UE_LOG(LogTemp, Warning, TEXT("No valid target location found."));
+		return FVector::ZeroVector;
+	}
+}
+
+
+

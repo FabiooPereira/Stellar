@@ -44,6 +44,7 @@ void AAlpacaMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	
 	PlayerInputComponent->BindAction(TEXT("Stay"), IE_Pressed,this, &AAlpacaMovement::Stay);
+	PlayerInputComponent->BindAction(TEXT("Call"),IE_Pressed, this, &AAlpacaMovement::Follow);
 }
 //Moves the Companion(Self) to a targetLocation and stops when it reaches the 
 void AAlpacaMovement::MoveToLocation(FVector& TargetLocation,const float DeltaTime)
@@ -86,7 +87,7 @@ void AAlpacaMovement::Stay()
 	IsFollowing = false;
 	UE_LOG(LogTemp, Warning, TEXT("Stay!!"));
 }
-void AAlpacaMovement::Call()
+void AAlpacaMovement::Follow()
 {
 	IsFollowing = true;
 }

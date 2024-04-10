@@ -27,8 +27,13 @@ public:
 	
 	void MoveToLocation( FVector& TargetLocation,const float DeltaTime);
 	void FollowCharacter(const ACharacter* CharacterToFollow,const float DeltaTime);
+	UFUNCTION(BlueprintCallable)
 	void Stay();
-	void Call();
+	UFUNCTION(BlueprintCallable)
+	void Follow();
+
+	
+	void SendToLocation();
 private:
 	void DrawDebugOffset(const ACharacter* Player)const;
 protected:
