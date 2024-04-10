@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="cea605fb-1819-4d2a-9cb1-44413e4388f2" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultInput.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultInput.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/BB_Companion.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/BB_Companion.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/BP_AICompanion.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/BP_AICompanion.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/BTDecorator_ShouldFollowPlayer.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/BTDecorator_ShouldFollowPlayer.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/BTTask_WanderAround.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/BTTask_WanderAround.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/BT_CompanionBehaviour.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/BT_CompanionBehaviour.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/ThirdPerson/Input/IMC_Default.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ThirdPerson/Input/IMC_Default.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/ThirdPerson/Maps/ThirdPersonMap/1/5Y/C35S1W0UAIF1OBWS6675VI.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/ThirdPerson/Maps/ThirdPersonMap/4/EB/KJJ4JMI6CPSZTILG8F5V3B.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/ThirdPerson/Maps/ThirdPersonMap/A/A8/VC2I6QKSG3AIYDJ95ZEL60.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/ThirdPerson/Maps/ThirdPersonMap/D/DX/HQIX76B8Q8HUXSB9UHR40R.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GruppOnion.uproject" beforeDir="false" afterPath="$PROJECT_DIR$/GruppOnion.uproject" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="2eqyFXczwatzX5Nz99UzfGk2bI4" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Fabio&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="cea605fb-1819-4d2a-9cb1-44413e4388f2" name="Changes" comment="" />
+      <created>1712646300004</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1712646300004</updated>
+      <workItem from="1712646302085" duration="31000" />
+      <workItem from="1712646338942" duration="12000" />
+      <workItem from="1712646368063" duration="40000" />
+      <workItem from="1712674944999" duration="6000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
