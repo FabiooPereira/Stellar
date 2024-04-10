@@ -69,5 +69,25 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+
+	//Companion logic
+	//UPROPERTY(EditAnywhere)
+	AActor* CurrentCompanion;
+	UPROPERTY(EditAnywhere)
+	class AAICompanionController* CurrentAIController;
+	UFUNCTION(BlueprintCallable)
+	void setCompanion(AAlpacaMovement* NewCompanion);
+	UFUNCTION(BlueprintCallable)
+	void CallCompanion();
+	UFUNCTION(BlueprintCallable)
+	void StayCompanion();
+	UFUNCTION(BlueprintCallable)
+	void MarkTargetPosition(float MaxTraceDistance);
+	UFUNCTION(BlueprintCallable)
+	FVector CaptureTargetLocation(float MaxTraceDistance);
+
+
+	void DrawDebugLineToCompanion();
 };
 
