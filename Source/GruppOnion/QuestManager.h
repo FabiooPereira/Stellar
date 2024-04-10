@@ -2,21 +2,38 @@
 
 #pragma once
 
+#include <map>
+
 #include "CoreMinimal.h"
 #include "GameFramework/GameState.h"
 #include "QuestManager.generated.h"
-class UQuest;
+class AQuest;
 /**
  * 
  */
+
 UCLASS()
 class GRUPPONION_API AQuestManager : public AGameState
 {
 	GENERATED_BODY()
 
+public:
+	virtual void BeginPlay() override;
+
 	UPROPERTY(EditAnywhere)
 	FString Description = "default description";
 
-	UQuest* CurrentObjective;
-	TArray<TSubclassOf<UQuest>*> Objectives;
+	UPROPERTY(EditAnywhere)
+	AQuest* CurrentObjective;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<AActor*> Objectives;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<FString, AActor*> MapOfObjectives;
+
+	void BeginNext();
+
+	UFUNCTION(BlueprintCallable)
+	bool IsCleared(FString Name);
 };
