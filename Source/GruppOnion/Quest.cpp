@@ -10,4 +10,5 @@ Quest::Quest()
 
 Quest::~Quest()
 {
+	
 }
