@@ -25,21 +25,17 @@ void AQuest::BeginQuest_Implementation()
 {
 }
 
-
-void AQuest::SetCleared()
-{
-}
-
-void AQuest::EndQuest()
+void AQuest::EndQuest_Implementation()
 {
 }
 
 void AQuest::Clear()
 {
+	Cleared = true;
 	UE_LOG(LogTemp, Error, TEXT("quest clear function"))
 }
 
-bool AQuest::IsCleared()
+bool AQuest::IsCleared_Implementation()
 {
-	return false;
+	return Cleared;
 }
