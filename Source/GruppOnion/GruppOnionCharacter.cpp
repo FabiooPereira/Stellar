@@ -52,9 +52,9 @@ AGruppOnionCharacter::AGruppOnionCharacter()
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 
 	// Create a follow camera
-	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
-	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+	// FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
+	// FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
+	// FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
@@ -84,7 +84,7 @@ void AGruppOnionCharacter::BeginPlay()
 		AAICompanionController* CompanionController = Cast<AAICompanionController>(AICompanionActor->GetInstigatorController());
 		if(CompanionController)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Succes"));
+			UE_LOG(LogTemp, Warning, TEXT("Succes"))
 			CurrentAIController = CompanionController;
 		}
 	}
@@ -109,7 +109,7 @@ void AGruppOnionCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AGruppOnionCharacter::Move);
 
 		// Looking
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AGruppOnionCharacter::Look);
+		//EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AGruppOnionCharacter::Look);
 	}
 	else
 	{
@@ -122,17 +122,21 @@ void AGruppOnionCharacter::Move(const FInputActionValue& Value)
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
 
-	if (Controller != nullptr)
+	if (Controller != nullptr && CustomCamera != nullptr)
 	{
-		// find out which way is forward
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		// get forward vector
-		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	
-		// get right vector 
-		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		FRotator CameraRotation = CustomCamera->GetComponentRotation();
+		FVector ForwardDirection =FRotationMatrix(CameraRotation).GetUnitAxis(EAxis::X);
+		FVector RightDirection = FRotationMatrix(CameraRotation).GetUnitAxis(EAxis::Y);
+		
+		// // find out which way is forward
+		// const FRotator Rotation = Controller->GetControlRotation();
+		// const FRotator YawRotation(0, Rotation.Yaw, 0);
+		//
+		// // get forward vector
+		// const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		//
+		// // get right vector 
+		// const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
 		// add movement 
 		AddMovementInput(ForwardDirection, MovementVector.Y);
@@ -162,7 +166,7 @@ void AGruppOnionCharacter::StayCompanion()
 	}
 	else
 	{
-		UE_LOG(LogTemp,Warning,TEXT("NUllptr"));
+		UE_LOG(LogTemp,Warning,TEXT("NUllptr"))
 	}
 	
 }
@@ -215,7 +219,7 @@ FVector AGruppOnionCharacter::CaptureTargetLocation(float MaxTraceDistance)
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if (!PlayerController)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Player controller not found."));
+		UE_LOG(LogTemp, Warning, TEXT("Player controller not found."))
 		return FVector::ZeroVector;
 	}
 	// Get the camera location and rotation
