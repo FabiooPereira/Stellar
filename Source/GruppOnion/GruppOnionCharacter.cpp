@@ -125,6 +125,7 @@ void AGruppOnionCharacter::Move(const FInputActionValue& Value)
 	if (FollowCamera != nullptr)
 	{
 		// Find out which way is forward and right relative to the camera
+		//Fabio
 		const FVector ForwardDirection = FollowCamera->GetForwardVector();
 		const FVector RightDirection = FollowCamera->GetRightVector();
 
