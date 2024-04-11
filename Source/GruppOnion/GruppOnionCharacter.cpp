@@ -109,7 +109,7 @@ void AGruppOnionCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AGruppOnionCharacter::Move);
 
 		// Looking
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AGruppOnionCharacter::Look);
+		//EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AGruppOnionCharacter::Look);
 	}
 	else
 	{
@@ -122,21 +122,23 @@ void AGruppOnionCharacter::Move(const FInputActionValue& Value)
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
 
-	if (Controller != nullptr)
+	if (FollowCamera != nullptr)
 	{
-		// find out which way is forward
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
+		// Find out which way is forward and right relative to the camera
+		const FVector ForwardDirection = FollowCamera->GetForwardVector();
+		const FVector RightDirection = FollowCamera->GetRightVector();
 
-		// get forward vector
-		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	
-		// get right vector 
-		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		// Calculate movement direction
+		FVector MoveDirection = ForwardDirection * MovementVector.Y + RightDirection * MovementVector.X;
 
-		// add movement 
-		AddMovementInput(ForwardDirection, MovementVector.Y);
-		AddMovementInput(RightDirection, MovementVector.X);
+		// Ensure the movement direction is normalized
+		if (!MoveDirection.IsNearlyZero())
+		{
+			MoveDirection = MoveDirection.GetSafeNormal();
+		}
+
+		// Add movement in the calculated direction
+		AddMovementInput(MoveDirection, 1.0f);
 	}
 }
 
