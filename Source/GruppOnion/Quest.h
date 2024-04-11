@@ -27,9 +27,6 @@ public:
 	void BeginQuest();
 
 	UFUNCTION(BlueprintCallable)
-	virtual void SetCleared();
-
-	UFUNCTION(BlueprintCallable)
 	virtual void EndQuest();
 
 	UFUNCTION(BlueprintCallable)
@@ -38,11 +35,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual bool IsCleared();
 
-
 	UPROPERTY(EditAnywhere)
 	FString Description = "default description";
 
 private:
-	UPROPERTY(VisibleAnywhere)
-	bool Cleared = true;
+	UPROPERTY(EditAnywhere)
+	bool Cleared = false;
 };
