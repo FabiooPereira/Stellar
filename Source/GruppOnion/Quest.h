@@ -26,23 +26,19 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 	void BeginQuest();
 
-	UFUNCTION(BlueprintCallable)
-	virtual void SetCleared();
-
-	UFUNCTION(BlueprintCallable)
-	virtual void EndQuest();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void EndQuest();
 
 	UFUNCTION(BlueprintCallable)
 	virtual void Clear();
 
-	UFUNCTION(BlueprintCallable)
-	virtual bool IsCleared();
-
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	bool IsCleared();
 
 	UPROPERTY(EditAnywhere)
 	FString Description = "default description";
 
 private:
-	UPROPERTY(VisibleAnywhere)
-	bool Cleared = true;
+	UPROPERTY(EditAnywhere)
+	bool Cleared = false;
 };

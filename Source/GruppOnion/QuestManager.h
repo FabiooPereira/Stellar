@@ -13,12 +13,13 @@ class AQuest;
  */
 
 UCLASS()
-class GRUPPONION_API AQuestManager : public AGameState
+class GRUPPONION_API AQuestManager : public AGameStateBase
 {
 	GENERATED_BODY()
 
 public:
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere)
 	FString Description = "default description";
