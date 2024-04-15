@@ -25,8 +25,8 @@ class AGruppOnionCharacter : public ACharacter
 	USpringArmComponent* CameraBoom;
 
 	/** Follow camera */
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	//UCameraComponent* FollowCamera;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UCameraComponent* FollowCamera;
 	
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -89,6 +89,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FVector CaptureTargetLocation(float MaxTraceDistance);
 
+	UFUNCTION(BlueprintCallable)
+	void setActiveCamera(UCameraComponent* newCamera);
 
 	void DrawDebugLineToCompanion();
 };
