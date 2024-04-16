@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Components/AudioComponent.h"
 #include "CraftingDialogue.generated.h"
+
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -15,11 +17,21 @@ class GRUPPONION_API UCraftingDialogue : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UCraftingDialogue();
+
+	UPROPERTY(EditAnywhere, Category="Audio", DisplayName="Use Sound?")
+	bool bUseAudio = false;
+
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Audio", DisplayName="Audio Component")
+	UAudioComponent* Acomp = nullptr;
+	
 	UFUNCTION(BlueprintCallable)
 	void OpenCraftMenu();
 
 	UFUNCTION(BlueprintCallable)
 	void CloseCraftMenu();
+
+	UFUNCTION(BlueprintCallable)
+	void LoadAudio();
 
 protected:
 	// Called when the game starts
