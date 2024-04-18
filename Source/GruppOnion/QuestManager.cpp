@@ -32,6 +32,18 @@ void AQuestManager::BeginPlay()
 	BeginNext();
 }
 
+void AQuestManager::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	/*
+		if (CurrentObjective && CurrentObjective->IsCleared())
+		{
+			CurrentObjective->EndQuest();
+			BeginNext();
+		}
+	*/
+}
+
 void AQuestManager::BeginNext()
 {
 	if (CurrentObjective)

@@ -38,7 +38,6 @@ void AAICompanionController::Tick(float DeltaTime)
 	}
 }
 
-
 void AAICompanionController::FollowPlayer()
 {
 	// Calculate the target location to follow the player
