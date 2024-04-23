@@ -127,7 +127,6 @@ void AAICompanionController::ChooseNewRandomLocation()
 		// Move to the random location
 		MoveToLocation(RandomLocation);
 			SetRandomLocationTimer();
-			
 		}
 	}
 }
