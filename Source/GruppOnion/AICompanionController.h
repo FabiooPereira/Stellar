@@ -16,7 +16,7 @@ class GRUPPONION_API AAICompanionController : public AAIController
 	GENERATED_BODY()
 public:
 	ACharacter* PlayerCharacter;
-	float FollowDistance = 200.0f; // Limit for how close it can get to the PlayerCharacter
+	float FollowDistance = 400.0f; // Limit for how close it can get to the PlayerCharacter
 protected:
 	virtual void BeginPlay() override;
 
