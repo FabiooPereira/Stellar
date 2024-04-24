@@ -55,9 +55,7 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-	class UCameraComponent* CustomCamera; // Pointer to the custom camera component
+			
 
 protected:
 	// APawn interface
@@ -70,7 +68,7 @@ public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
-	//FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 
 	//Companion logic
@@ -89,8 +87,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FVector CaptureTargetLocation(float MaxTraceDistance);
 
-	UFUNCTION(BlueprintCallable)
-	void setActiveCamera(UCameraComponent* newCamera);
 
 	void DrawDebugLineToCompanion();
 };
