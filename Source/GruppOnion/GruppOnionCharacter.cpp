@@ -254,6 +254,3 @@ void AGruppOnionCharacter::setActiveCamera(UCameraComponent* newCamera)
 {
 	CustomCamera = newCamera;
 }
-
-
-
