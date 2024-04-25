@@ -204,6 +204,7 @@ void AAICompanionController::WanderNewRandomLocation()
 	// Calculate random location relative to the initial idle position
 	FVector2D RandomLocation2D = FMath::RandPointInCircle(600);
 	FVector RandomLocation = FVector(RandomLocation2D.X, RandomLocation2D.Y, 0.0f) + InitialIdlePosition;
+	DrawDebugSphere(GetWorld(), RandomLocation, 50.0f, 12, FColor::Green, false, 5.0f);
 
 	// Move to the random location
 	MoveToLocation(RandomLocation);
