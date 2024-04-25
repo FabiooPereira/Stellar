@@ -26,7 +26,7 @@ AGruppOnionCharacter::AGruppOnionCharacter()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
-
+		
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -53,12 +53,12 @@ AGruppOnionCharacter::AGruppOnionCharacter()
 
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
-	// Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
+	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+	
 }
 
 void AGruppOnionCharacter::BeginPlay()
@@ -69,27 +69,28 @@ void AGruppOnionCharacter::BeginPlay()
 	//Add Input Mapping Context
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<
-			UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
 	//Find reference to Companion(tag) and sets its controller to currentAIController;
 	TArray<AActor*> FoundActors;
-	UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("AICompanion"), FoundActors);
-	if (FoundActors.Num() > 0)
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(),FName("AICompanion"), FoundActors);
+	if(FoundActors.Num()>0)
 	{
-		AActor* AICompanionActor = FoundActors[0];
+		AActor* AICompanionActor= FoundActors[0];
 		CurrentCompanion = AICompanionActor;
-		AAICompanionController* CompanionController = Cast<AAICompanionController>(
-			AICompanionActor->GetInstigatorController());
-		if (CompanionController)
+		AAICompanionController* CompanionController = Cast<AAICompanionController>(AICompanionActor->GetInstigatorController());
+		if(CompanionController)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Succes"));
+			UE_LOG(LogTemp, Warning, TEXT("Succes"))
 			CurrentAIController = CompanionController;
 		}
 	}
+	
+	
+	
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -98,8 +99,8 @@ void AGruppOnionCharacter::BeginPlay()
 void AGruppOnionCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	// Set up action bindings
-	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
-	{
+	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
+		
 		// Jumping
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
@@ -112,10 +113,7 @@ void AGruppOnionCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	}
 	else
 	{
-		UE_LOG(LogTemplateCharacter, Error,
-		       TEXT(
-			       "'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."
-		       ), *GetNameSafe(this));
+		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
 	}
 }
 
@@ -124,23 +122,25 @@ void AGruppOnionCharacter::Move(const FInputActionValue& Value)
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
 
-	if (FollowCamera != nullptr)
+	if (Controller != nullptr && CustomCamera != nullptr)
 	{
-		// Find out which way is forward and right relative to the camera
-		const FVector ForwardDirection = FollowCamera->GetForwardVector();
-		const FVector RightDirection = FollowCamera->GetRightVector();
+		FRotator CameraRotation = CustomCamera->GetComponentRotation();
+		FVector ForwardDirection =FRotationMatrix(CameraRotation).GetUnitAxis(EAxis::X);
+		FVector RightDirection = FRotationMatrix(CameraRotation).GetUnitAxis(EAxis::Y);
+		
+		// // find out which way is forward
+		// const FRotator Rotation = Controller->GetControlRotation();
+		// const FRotator YawRotation(0, Rotation.Yaw, 0);
+		//
+		// // get forward vector
+		// const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		//
+		// // get right vector 
+		// const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
-		// Calculate movement direction
-		FVector MoveDirection = ForwardDirection * MovementVector.Y + RightDirection * MovementVector.X;
-
-		// Ensure the movement direction is normalized
-		if (!MoveDirection.IsNearlyZero())
-		{
-			MoveDirection = MoveDirection.GetSafeNormal();
-		}
-
-		// Add movement in the calculated direction
-		AddMovementInput(MoveDirection, 1.0f);
+		// add movement 
+		AddMovementInput(ForwardDirection, MovementVector.Y);
+		AddMovementInput(RightDirection, MovementVector.X);
 	}
 }
 
@@ -155,8 +155,8 @@ void AGruppOnionCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+	
 }
-
 //---------------------------CompanionCalls---------------------------------------//
 void AGruppOnionCharacter::StayCompanion()
 {
@@ -166,32 +166,31 @@ void AGruppOnionCharacter::StayCompanion()
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("NUllptr"));
+		UE_LOG(LogTemp,Warning,TEXT("NUllptr"))
 	}
+	
 }
-
 void AGruppOnionCharacter::CallCompanion()
 {
+	
 	if (CurrentAIController)
 	{
-		CurrentAIController->ContinueFollowPlayer();
-	}
-	else
+	CurrentAIController->ContinueFollowPlayer();
+	}else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("NUllptr"));
+		UE_LOG(LogTemp,Warning,TEXT("NUllptr"));
 	}
+	
 }
-
 void AGruppOnionCharacter::setCompanion(AAlpacaMovement* NewCompanion)
 {
 	//CurrentCompanion = NewCompanion;
 }
-
 ///////////////////////////////////////////////
 
 void AGruppOnionCharacter::DrawDebugLineToCompanion()
 {
-	if (CurrentCompanion)
+	if(CurrentCompanion)
 	{
 		FVector PlayerLocation = GetActorLocation();
 
@@ -206,7 +205,7 @@ void AGruppOnionCharacter::DrawDebugLineToCompanion()
 			2.0f,
 			0,
 			5.0f
-		);
+			);
 	}
 }
 
@@ -215,13 +214,12 @@ void AGruppOnionCharacter::MarkTargetPosition(float MaxTraceDistance)
 {
 	FVector TargetPosition = CaptureTargetLocation(MaxTraceDistance);
 }
-
 FVector AGruppOnionCharacter::CaptureTargetLocation(float MaxTraceDistance)
 {
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if (!PlayerController)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Player controller not found."));
+		UE_LOG(LogTemp, Warning, TEXT("Player controller not found."))
 		return FVector::ZeroVector;
 	}
 	// Get the camera location and rotation
@@ -244,7 +242,15 @@ FVector AGruppOnionCharacter::CaptureTargetLocation(float MaxTraceDistance)
 		DrawDebugLine(GetWorld(), CameraLocation, TargetPosition, FColor::Green, false, 2.0f, 0, 2.0f);
 		return HitResult.ImpactPoint;
 	}
-	// No valid target location found
-	UE_LOG(LogTemp, Warning, TEXT("No valid target location found."));
-	return FVector::ZeroVector;
+	else
+	{
+		// No valid target location found
+		UE_LOG(LogTemp, Warning, TEXT("No valid target location found."));
+		return FVector::ZeroVector;
+	}
+}
+
+void AGruppOnionCharacter::setActiveCamera(UCameraComponent* newCamera)
+{
+	CustomCamera = newCamera;
 }
