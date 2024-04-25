@@ -15,8 +15,9 @@ void AAICompanionController::BeginPlay()
 	// Find the player character
 	PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 
-	CurrentState = EAICompanionState::Follow;
+	CurrentState = EAICompanionState::Idle;
 }
+
 
 void AAICompanionController::Tick(float DeltaTime)
 {
@@ -27,11 +28,14 @@ void AAICompanionController::Tick(float DeltaTime)
 	case  EAICompanionState::Idle:
 			IdleState();
 		break;
+	case EAICompanionState::Wander:
+			WanderState();
+		break;
 	case EAICompanionState::Follow:
 			FollowPlayer();
 		break;
 	case EAICompanionState::WalkAroundPlayer:
-		WalkAroundPlayer(); 
+			WalkAroundPlayer(); 
 		break;
 	default:
 			
@@ -39,11 +43,34 @@ void AAICompanionController::Tick(float DeltaTime)
 	}
 	
 }
+
+
 void AAICompanionController::IdleState()
 {
+	StopMovement();
+	InitialIdlePosition = GetPawn()->GetActorLocation();
+	//StopMovement();
+	FVector AlpacaLocation = GetPawn()->GetActorLocation();
 	
-}
+	DrawDebugSphere(GetWorld(),AlpacaLocation , 300, 12, FColor::Green, false, -1);
+	float CurrentDistanceToPlayer = FVector::Dist(GetPawn()->GetActorLocation(), PlayerCharacter->GetActorLocation());
 
+	if(!GetWorldTimerManager().IsTimerActive(IdleTimeLimitHandle))
+	{
+		GetWorldTimerManager().SetTimer(IdleTimeLimitHandle, this, &AAICompanionController::StartWandering, IdleTimeLimit, false);
+	}
+	
+	if(CurrentDistanceToPlayer<300)
+	{
+		SetState(EAICompanionState::Follow);
+	}
+	// GetWorldTimerManager().SetTimer(WanderingTimerHandle, this, &AAICompanionController::StartWandering, 3.0f, false
+	// 	);
+}
+void AAICompanionController::StartWandering()
+{
+	SetState(EAICompanionState::Wander);
+}
 void AAICompanionController::WalkAroundPlayer(){
 	float CurrentDistanceToPlayer = FVector::Dist(GetPawn()->GetActorLocation(), PlayerCharacter->GetActorLocation());
 	if(CurrentDistanceToPlayer>MaxDistanceAllowedFromPlayer)
@@ -58,30 +85,42 @@ void AAICompanionController::FollowPlayer()
 	//Calculate the distance between AI companion and player
 	float CurrentDistanceToPlayer = FVector::Dist(GetPawn()->GetActorLocation(), PlayerCharacter->GetActorLocation());
 
-	if(CurrentDistanceToPlayer>MaxDistanceAllowedFromPlayer)
-	{
-		FVector DirectionToPlayer = (PlayerCharacter->GetActorLocation() - GetPawn()->GetActorLocation()).GetSafeNormal();
-		FVector TargetLocation = PlayerCharacter->GetActorLocation() - DirectionToPlayer * 100.0f; // Adjust the offset as needed
-		MoveToLocation(TargetLocation);
-		
-	}else if(CurrentDistanceToPlayer<=200)
+	// if(CurrentDistanceToPlayer>MaxDistanceAllowedFromPlayer)
+	// {
+		 FVector DirectionToPlayer = (PlayerCharacter->GetActorLocation() - GetPawn()->GetActorLocation()).GetSafeNormal();
+		 FVector TargetLocation = PlayerCharacter->GetActorLocation() - DirectionToPlayer * 150.0f; // Adjust the offset as needed
+		 MoveToLocation(TargetLocation);
+		 ////MoveToActor(PlayerCharacter, 150,true, true,true,0,true
+		 	////);
+		// Get the AI's velocity
+		//FVector Velocity = GetPawn()->GetVelocity();
+
+		// Calculate the rotation based on the velocity direction
+		//FRotator NewRotation = Velocity.Rotation();
+    
+		// Apply the new rotation to the AI
+		//GetPawn()->SetActorRotation(NewRotation);
+
+		// Move the AI towards the player
+		//MoveToActor(PlayerCharacter, 150,true, true,true,0,true);
+	if(CurrentDistanceToPlayer<=200)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Transitioning to Idle state"));
 		SetState(EAICompanionState::WalkAroundPlayer);
 	}
 	
-}
+}  
 
 void AAICompanionController::StopFollowPlayer()
 {
 	bShouldFollowPlayer = false;
-	StopMovement();
+	SetState(EAICompanionState::Idle);
 }
 
 void AAICompanionController::ContinueFollowPlayer()
 {
 	bShouldFollowPlayer = true;
-	FollowPlayer();
+	SetState(EAICompanionState::Follow);
 }
 //-------------------------------------------------States-------------------------------------------------------------//
 
@@ -93,7 +132,14 @@ void AAICompanionController::SetState(EAICompanionState NewState)
 	}
 	else if(NewState == EAICompanionState::Follow)
 	{
+		GetWorldTimerManager().ClearTimer(IdleTimeLimitHandle);
 		GetWorldTimerManager().ClearTimer(RandomMoveTimerHandle);
+		GetWorldTimerManager().ClearTimer(WanderingTimerHandle);
+	}
+	else if(NewState == EAICompanionState::Idle)
+	{
+		GetWorldTimerManager().ClearTimer(RandomMoveTimerHandle);
+		GetWorldTimerManager().ClearTimer(WanderingTimerHandle);
 	}
 	CurrentState = NewState;
 }
@@ -135,4 +181,31 @@ void AAICompanionController::ChooseNewRandomLocation()
 			SetRandomLocationTimer();
 		}
 	}
+	
+}
+void AAICompanionController::WanderState()
+{
+	FVector AlpacaLocation = GetPawn()->GetActorLocation();
+	
+	DrawDebugSphere(GetWorld(),AlpacaLocation , 300, 12, FColor::Green, false, -1);
+	
+	if(!GetWorldTimerManager().IsTimerActive(WanderingTimerHandle))
+	{
+		GetWorldTimerManager().SetTimer(WanderingTimerHandle, this, &AAICompanionController::WanderNewRandomLocation, 2, false);
+	}
+	float CurrentDistanceToPlayer = FVector::Dist(GetPawn()->GetActorLocation(), PlayerCharacter->GetActorLocation());
+	if(CurrentDistanceToPlayer<300)
+	{
+		SetState(EAICompanionState::Follow);
+	}
+}
+void AAICompanionController::WanderNewRandomLocation()
+{
+	// Calculate random location relative to the initial idle position
+	FVector2D RandomLocation2D = FMath::RandPointInCircle(600);
+	FVector RandomLocation = FVector(RandomLocation2D.X, RandomLocation2D.Y, 0.0f) + InitialIdlePosition;
+	DrawDebugSphere(GetWorld(), RandomLocation, 50.0f, 12, FColor::Green, false, 5.0f);
+
+	// Move to the random location
+	MoveToLocation(RandomLocation);
 }
