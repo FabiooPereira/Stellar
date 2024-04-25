@@ -12,7 +12,7 @@ enum class EAICompanionState : uint8
 {
 	Idle,
 	Follow,
-	WonderAround,
+	WalkAroundPlayer,
 	Stay
 };
 /**
@@ -32,6 +32,7 @@ protected:
 	EAICompanionState CurrentState;
 public:
 	virtual void Tick(float DeltaTime) override;
+	void WalkAroundPlayer();
 
 	// Function to make the companion follow the player
 	void FollowPlayer();

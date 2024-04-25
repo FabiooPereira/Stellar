@@ -30,11 +30,27 @@ void AAICompanionController::Tick(float DeltaTime)
 	case EAICompanionState::Follow:
 			FollowPlayer();
 		break;
+	case EAICompanionState::WalkAroundPlayer:
+		WalkAroundPlayer(); 
+		break;
 	default:
 			
 		break;
 	}
 	
+}
+void AAICompanionController::IdleState()
+{
+	
+}
+
+void AAICompanionController::WalkAroundPlayer(){
+	float CurrentDistanceToPlayer = FVector::Dist(GetPawn()->GetActorLocation(), PlayerCharacter->GetActorLocation());
+	if(CurrentDistanceToPlayer>MaxDistanceAllowedFromPlayer)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Transitioning to Follow State"))
+		SetState(EAICompanionState::Follow);
+	}
 }
 
 void AAICompanionController::FollowPlayer()
@@ -51,7 +67,7 @@ void AAICompanionController::FollowPlayer()
 	}else if(CurrentDistanceToPlayer<=200)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Transitioning to Idle state"));
-		SetState(EAICompanionState::Idle);
+		SetState(EAICompanionState::WalkAroundPlayer);
 	}
 	
 }
@@ -67,21 +83,11 @@ void AAICompanionController::ContinueFollowPlayer()
 	bShouldFollowPlayer = true;
 	FollowPlayer();
 }
-
-void AAICompanionController::IdleState()
-{
-	float CurrentDistanceToPlayer = FVector::Dist(GetPawn()->GetActorLocation(), PlayerCharacter->GetActorLocation());
-	if(CurrentDistanceToPlayer>MaxDistanceAllowedFromPlayer)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Transitioning to Follow State"))
-		SetState(EAICompanionState::Follow);
-	}
-	
-}
+//-------------------------------------------------States-------------------------------------------------------------//
 
 void AAICompanionController::SetState(EAICompanionState NewState)
 {
-	if(NewState == EAICompanionState::Idle)
+	if(NewState == EAICompanionState::WalkAroundPlayer)
 	{
 		GetWorldTimerManager().SetTimer(RandomMoveTimerHandle, this, &AAICompanionController::ChooseNewRandomLocation, 2.0f, false);
 	}
@@ -103,7 +109,7 @@ void AAICompanionController::ChooseNewRandomLocation()
 {
 	UE_LOG(LogTemp, Warning, TEXT("ChooseNewRandomLocation called"))
 	
-	if (CurrentState == EAICompanionState::Idle)
+	if (CurrentState == EAICompanionState::WalkAroundPlayer)
 	{
 		float CurrentDistanceToPlayer = FVector::Dist(GetPawn()->GetActorLocation(), PlayerCharacter->GetActorLocation());
 		if(CurrentDistanceToPlayer>MaxDistanceAllowedFromPlayer)
