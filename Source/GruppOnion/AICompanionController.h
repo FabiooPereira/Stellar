@@ -7,14 +7,6 @@
 #include "AIController.h"
 #include "AICompanionController.generated.h"
 
-//Define enum for AI companion states
-enum class EAICompanionState : uint8
-{
-	Idle,
-	Follow,
-	WonderAround,
-	Stay
-};
 /**
  * 
  */
@@ -25,11 +17,9 @@ class GRUPPONION_API AAICompanionController : public AAIController
 public:
 	ACharacter* PlayerCharacter;
 	float FollowDistance = 400.0f; // Limit for how close it can get to the PlayerCharacter
-	FTimerHandle RandomMoveTimerHandle;
 protected:
 	virtual void BeginPlay() override;
 
-	EAICompanionState CurrentState;
 public:
 	virtual void Tick(float DeltaTime) override;
 
@@ -39,16 +29,6 @@ public:
 	void StopFollowPlayer();
 	//Function to call for the Companion
 	void ContinueFollowPlayer();
-	//IdleState
-	void IdleState();
-	//SetState
-	void SetState(EAICompanionState NewState);
-	//SetTimerFornew location
-	void SetRandomLocationTimer();
-
-	void ChooseNewRandomLocation();
 private:
-	float MaxDistanceAllowedFromPlayer = 600.0f;
-	
 	bool bShouldFollowPlayer= true;
 };
