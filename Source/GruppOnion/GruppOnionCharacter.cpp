@@ -65,13 +65,12 @@ void AGruppOnionCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
-	
+
 	//Add Input Mapping Context
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Hello from player"))
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
