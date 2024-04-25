@@ -94,4 +94,3 @@ public:
 
 	void DrawDebugLineToCompanion();
 };
-
