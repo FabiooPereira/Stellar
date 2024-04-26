@@ -52,7 +52,7 @@ void AAICompanionController::IdleState()
 	//StopMovement();
 	FVector AlpacaLocation = GetPawn()->GetActorLocation();
 	
-	DrawDebugSphere(GetWorld(),AlpacaLocation , 300, 12, FColor::Green, false, -1);
+	//DrawDebugSphere(GetWorld(),AlpacaLocation , 300, 12, FColor::Green, false, -1);
 	float CurrentDistanceToPlayer = FVector::Dist(GetPawn()->GetActorLocation(), PlayerCharacter->GetActorLocation());
 
 	if(!GetWorldTimerManager().IsTimerActive(IdleTimeLimitHandle))
@@ -174,7 +174,7 @@ void AAICompanionController::ChooseNewRandomLocation()
 		{
 			RandomLocation = PlayerLocation + (RandomLocation -PlayerLocation).GetSafeNormal() * 300; 
 		}
-		DrawDebugSphere(GetWorld(), RandomLocation, 50.0f, 12, FColor::Green, false, 5.0f);
+		//DrawDebugSphere(GetWorld(), RandomLocation, 50.0f, 12, FColor::Green, false, 5.0f);
 
 		// Move to the random location
 		MoveToLocation(RandomLocation);
@@ -187,7 +187,7 @@ void AAICompanionController::WanderState()
 {
 	FVector AlpacaLocation = GetPawn()->GetActorLocation();
 	
-	DrawDebugSphere(GetWorld(),AlpacaLocation , 300, 12, FColor::Green, false, -1);
+	//DrawDebugSphere(GetWorld(),AlpacaLocation , 300, 12, FColor::Green, false, -1);
 	
 	if(!GetWorldTimerManager().IsTimerActive(WanderingTimerHandle))
 	{
@@ -204,7 +204,7 @@ void AAICompanionController::WanderNewRandomLocation()
 	// Calculate random location relative to the initial idle position
 	FVector2D RandomLocation2D = FMath::RandPointInCircle(600);
 	FVector RandomLocation = FVector(RandomLocation2D.X, RandomLocation2D.Y, 0.0f) + InitialIdlePosition;
-	DrawDebugSphere(GetWorld(), RandomLocation, 50.0f, 12, FColor::Green, false, 5.0f);
+	//DrawDebugSphere(GetWorld(), RandomLocation, 50.0f, 12, FColor::Green, false, 5.0f);
 
 	// Move to the random location
 	MoveToLocation(RandomLocation);
