@@ -5,10 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
 #include "ProceduralMeshComponent.h"
-#include "Components/DecalComponent.h"
-#include "Components/SplineComponent.h"
 #include "SC_Darkness.generated.h"
-
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -22,12 +19,6 @@ public:
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Decal", meta = (InstanceEditable = "true", EditInline = "true"))
-	UDecalComponent* DarknessDecal;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Spline")
-	USplineComponent* DarknessSpline;
-
 
 protected:
 	// Called when the game starts
@@ -36,11 +27,7 @@ protected:
 private:
 	// Procedural mesh component to represent the darkness
 	UProceduralMeshComponent* ProceduralMesh;
-	
-
 
 	// Helper function to create or update the mesh
 	void CreateOrUpdateMesh();
-	void InitializeDecal();
-
 };
