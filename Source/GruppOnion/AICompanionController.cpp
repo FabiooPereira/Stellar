@@ -22,20 +22,23 @@ void AAICompanionController::BeginPlay()
 void AAICompanionController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	CheckForDarknessOverlap();
 	switch (CurrentState)
 	{
 	case  EAICompanionState::Idle:
 			IdleState();
 		break;
-	case EAICompanionState::Wander:
+	case EAICompanionState::WanderAround:
 			WanderState();
 		break;
-	case EAICompanionState::Follow:
-			FollowPlayer();
+	case EAICompanionState::FollowPlayer:
+			FollowPlayerState();
 		break;
-	case EAICompanionState::WalkAroundPlayer:
-			WalkAroundPlayer(); 
+	case EAICompanionState::WanderAroundPlayer:
+			WanderAroundPlayerState(); 
+		break;
+	case EAICompanionState::Startled:
+			StartledState();
 		break;
 	default:
 			
@@ -62,25 +65,25 @@ void AAICompanionController::IdleState()
 	
 	if(CurrentDistanceToPlayer<300)
 	{
-		SetState(EAICompanionState::Follow);
+		SetState(EAICompanionState::FollowPlayer);
 	}
 	// GetWorldTimerManager().SetTimer(WanderingTimerHandle, this, &AAICompanionController::StartWandering, 3.0f, false
 	// 	);
 }
 void AAICompanionController::StartWandering()
 {
-	SetState(EAICompanionState::Wander);
+	SetState(EAICompanionState::WanderAround);
 }
-void AAICompanionController::WalkAroundPlayer(){
+void AAICompanionController::WanderAroundPlayerState(){
 	float CurrentDistanceToPlayer = FVector::Dist(GetPawn()->GetActorLocation(), PlayerCharacter->GetActorLocation());
 	if(CurrentDistanceToPlayer>MaxDistanceAllowedFromPlayer)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Transitioning to Follow State"))
-		SetState(EAICompanionState::Follow);
+		SetState(EAICompanionState::FollowPlayer);
 	}
 }
 
-void AAICompanionController::FollowPlayer()
+void AAICompanionController::FollowPlayerState()
 {
 	//Calculate the distance between AI companion and player
 	float CurrentDistanceToPlayer = FVector::Dist(GetPawn()->GetActorLocation(), PlayerCharacter->GetActorLocation());
@@ -106,7 +109,7 @@ void AAICompanionController::FollowPlayer()
 	if(CurrentDistanceToPlayer<=200)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Transitioning to Idle state"));
-		SetState(EAICompanionState::WalkAroundPlayer);
+		SetState(EAICompanionState::WanderAroundPlayer);
 	}
 	
 }  
@@ -120,17 +123,17 @@ void AAICompanionController::StopFollowPlayer()
 void AAICompanionController::ContinueFollowPlayer()
 {
 	bShouldFollowPlayer = true;
-	SetState(EAICompanionState::Follow);
+	SetState(EAICompanionState::FollowPlayer);
 }
 //-------------------------------------------------States-------------------------------------------------------------//
 
 void AAICompanionController::SetState(EAICompanionState NewState)
 {
-	if(NewState == EAICompanionState::WalkAroundPlayer)
+	if(NewState == EAICompanionState::WanderAroundPlayer)
 	{
 		GetWorldTimerManager().SetTimer(RandomMoveTimerHandle, this, &AAICompanionController::ChooseNewRandomLocation, 2.0f, false);
 	}
-	else if(NewState == EAICompanionState::Follow)
+	else if(NewState == EAICompanionState::FollowPlayer)
 	{
 		GetWorldTimerManager().ClearTimer(IdleTimeLimitHandle);
 		GetWorldTimerManager().ClearTimer(RandomMoveTimerHandle);
@@ -155,13 +158,13 @@ void AAICompanionController::ChooseNewRandomLocation()
 {
 	UE_LOG(LogTemp, Warning, TEXT("ChooseNewRandomLocation called"))
 	
-	if (CurrentState == EAICompanionState::WalkAroundPlayer)
+	if (CurrentState == EAICompanionState::WanderAroundPlayer)
 	{
 		float CurrentDistanceToPlayer = FVector::Dist(GetPawn()->GetActorLocation(), PlayerCharacter->GetActorLocation());
 		if(CurrentDistanceToPlayer>MaxDistanceAllowedFromPlayer)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Transitioning to Follow State"))
-			SetState(EAICompanionState::Follow);
+			SetState(EAICompanionState::FollowPlayer);
 		}
 		else
 		{
@@ -196,7 +199,7 @@ void AAICompanionController::WanderState()
 	float CurrentDistanceToPlayer = FVector::Dist(GetPawn()->GetActorLocation(), PlayerCharacter->GetActorLocation());
 	if(CurrentDistanceToPlayer<300)
 	{
-		SetState(EAICompanionState::Follow);
+		SetState(EAICompanionState::FollowPlayer);
 	}
 }
 void AAICompanionController::WanderNewRandomLocation()
@@ -209,3 +212,42 @@ void AAICompanionController::WanderNewRandomLocation()
 	// Move to the random location
 	MoveToLocation(RandomLocation);
 }
+
+void AAICompanionController::StartledState()
+{
+	if(DarknessActorRef && !IsRunningAway)
+	{
+		FVector DirectionAwayFromDarkness = GetPawn()->GetActorLocation() - DarknessActorRef->GetActorLocation();
+		DirectionAwayFromDarkness.Normalize();
+
+		FVector TargetLocation = GetPawn()->GetActorLocation() + DirectionAwayFromDarkness * 1000;
+		
+		MoveToLocation(TargetLocation);
+
+		float DistanceToTarget = FVector::Dist(GetPawn()->GetActorLocation(), DarknessActorRef->GetActorLocation());
+		if(DistanceToTarget >= 1000)
+		{
+			SetState(EAICompanionState::Idle);
+			IsRunningAway = false;
+			UE_LOG(LogTemp, Warning, TEXT("Transition into idle"))
+		}
+	}
+	
+}
+void AAICompanionController::CheckForDarknessOverlap()
+{
+	TArray<AActor*> OverlappingActors;
+	GetPawn()->GetOverlappingActors(OverlappingActors);
+
+	
+	for(AActor* OverlappingActor: OverlappingActors )
+	{
+		if(OverlappingActor->ActorHasTag("Darkness") && CurrentState!=EAICompanionState::Startled)
+		{
+			UE_LOG(LogTemp,Warning,TEXT("Alpaca Is Inside Darkness"))
+			DarknessActorRef = OverlappingActor;
+			SetState(EAICompanionState::Startled);
+		}
+	}
+}
+
