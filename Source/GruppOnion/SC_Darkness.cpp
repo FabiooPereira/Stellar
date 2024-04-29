@@ -3,19 +3,22 @@
 
 #include "SC_Darkness.h"
 
-// Sets default values for this component's properties
+// USC_Darkness constructor
 USC_Darkness::USC_Darkness()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
+	// Set this component to tick every frame.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	bVisualizeComponent = true;
-
-	// Create and attach the procedural mesh component
+	// Create the procedural mesh component and attach it.
 	ProceduralMesh = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("GeneratedMesh"));
 	ProceduralMesh->SetupAttachment(this);
+
+	// Create and attach the spline component
+	DarknessSpline = CreateDefaultSubobject<USplineComponent>(TEXT("DarknessSpline"));
+	DarknessSpline->SetupAttachment(this); // Attach to the USC_Darkness component
+
 }
+
 
 
 // Called when the game starts
@@ -24,6 +27,8 @@ void USC_Darkness::BeginPlay()
 	Super::BeginPlay();
 
 	CreateOrUpdateMesh();
+	InitializeDecal();
+
 	
 }
 
@@ -45,4 +50,16 @@ void USC_Darkness::CreateOrUpdateMesh()
 	// Update the procedural mesh
 	ProceduralMesh->CreateMeshSection_LinearColor(0, Vertices, Triangles, TArray<FVector>(), TArray<FVector2D>(), TArray<FLinearColor>(), TArray<FProcMeshTangent>(), true);
 }
+
+void USC_Darkness::InitializeDecal()
+{
+	// Set decal size (width, height, depth)
+	DarknessDecal->DecalSize = FVector(200.0f, 100.0f, 100.0f);
+	
+	// Set other properties such as fade duration and start distance
+	DarknessDecal->FadeScreenSize = 0.01f;
+	DarknessDecal->FadeStartDelay = 0.0f;
+	DarknessDecal->FadeDuration = 10.0f;
+}
+
 
