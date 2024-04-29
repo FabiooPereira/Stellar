@@ -33,6 +33,8 @@ public:
 	FTimerHandle RandomMoveTimerHandle;
 	FTimerHandle WanderingTimerHandle;
 
+	AActor* DarknessActorRef;
+
 
 	FVector InitialIdlePosition;
 protected:
@@ -62,7 +64,10 @@ public:
 
 	 void WanderNewRandomLocation();
 
+	void CheckForDarknessOverlap();
 	void StartledState();
+
+	bool IsRunningAway=false;
 private:
 	float MaxDistanceAllowedFromPlayer = 600.0f;
 	
