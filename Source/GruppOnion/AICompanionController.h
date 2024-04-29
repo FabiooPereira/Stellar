@@ -14,7 +14,8 @@ enum class EAICompanionState : uint8
 	Wander,
 	Follow,
 	WalkAroundPlayer,
-	Stay
+	Stay,
+	Startled
 };
 /**
  * 
@@ -60,6 +61,8 @@ public:
 	void ChooseNewRandomLocation();
 
 	 void WanderNewRandomLocation();
+
+	void StartledState();
 private:
 	float MaxDistanceAllowedFromPlayer = 600.0f;
 	

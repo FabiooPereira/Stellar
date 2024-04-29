@@ -209,3 +209,7 @@ void AAICompanionController::WanderNewRandomLocation()
 	// Move to the random location
 	MoveToLocation(RandomLocation);
 }
+
+void AAICompanionController::StartledState()
+{
+}
