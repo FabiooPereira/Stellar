@@ -14,7 +14,8 @@ enum class EAICompanionState : uint8
 	Wander,
 	Follow,
 	WalkAroundPlayer,
-	Stay
+	Stay,
+	Startled
 };
 /**
  * 
@@ -31,6 +32,8 @@ public:
 	float IdleTimeLimit=3.0;
 	FTimerHandle RandomMoveTimerHandle;
 	FTimerHandle WanderingTimerHandle;
+
+	AActor* DarknessActorRef;
 
 
 	FVector InitialIdlePosition;
@@ -60,6 +63,11 @@ public:
 	void ChooseNewRandomLocation();
 
 	 void WanderNewRandomLocation();
+
+	void CheckForDarknessOverlap();
+	void StartledState();
+
+	bool IsRunningAway=false;
 private:
 	float MaxDistanceAllowedFromPlayer = 600.0f;
 	

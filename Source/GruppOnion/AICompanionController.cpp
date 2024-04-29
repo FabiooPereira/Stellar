@@ -22,7 +22,7 @@ void AAICompanionController::BeginPlay()
 void AAICompanionController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	CheckForDarknessOverlap();
 	switch (CurrentState)
 	{
 	case  EAICompanionState::Idle:
@@ -36,6 +36,9 @@ void AAICompanionController::Tick(float DeltaTime)
 		break;
 	case EAICompanionState::WalkAroundPlayer:
 			WalkAroundPlayer(); 
+		break;
+	case EAICompanionState::Startled:
+			StartledState();
 		break;
 	default:
 			
@@ -209,3 +212,42 @@ void AAICompanionController::WanderNewRandomLocation()
 	// Move to the random location
 	MoveToLocation(RandomLocation);
 }
+
+void AAICompanionController::StartledState()
+{
+	if(DarknessActorRef && !IsRunningAway)
+	{
+		FVector DirectionAwayFromDarkness = GetPawn()->GetActorLocation() - DarknessActorRef->GetActorLocation();
+		DirectionAwayFromDarkness.Normalize();
+
+		FVector TargetLocation = GetPawn()->GetActorLocation() + DirectionAwayFromDarkness * 1000;
+		
+		MoveToLocation(TargetLocation);
+
+		float DistanceToTarget = FVector::Dist(GetPawn()->GetActorLocation(), DarknessActorRef->GetActorLocation());
+		if(DistanceToTarget >= 1000)
+		{
+			SetState(EAICompanionState::Idle);
+			IsRunningAway = false;
+			UE_LOG(LogTemp, Warning, TEXT("Transition into idle"))
+		}
+	}
+	
+}
+void AAICompanionController::CheckForDarknessOverlap()
+{
+	TArray<AActor*> OverlappingActors;
+	GetPawn()->GetOverlappingActors(OverlappingActors);
+
+	
+	for(AActor* OverlappingActor: OverlappingActors )
+	{
+		if(OverlappingActor->ActorHasTag("Darkness") && CurrentState!=EAICompanionState::Startled)
+		{
+			UE_LOG(LogTemp,Warning,TEXT("Alpaca Is Inside Darkness"))
+			DarknessActorRef = OverlappingActor;
+			SetState(EAICompanionState::Startled);
+		}
+	}
+}
+
