@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "Interface_Interactable.generated.h"
+#include "Interface_Grab.generated.h"
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
-class UInterface_Interactable : public UInterface
+class UInterface_Grab : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -16,25 +16,17 @@ class UInterface_Interactable : public UInterface
 /**
  * 
  */
-class GRUPPONION_API IInterface_Interactable
+class GRUPPONION_API IInterface_Grab
 {
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interaction")
-	void Interact(AActor* Instigator);
-	virtual void Interact_Implementation(AActor* Instigator) = 0;
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Grab")
 	void InteractGrab(AActor* Instigator);
-	virtual void InteractGrab_Implementation(AActor* GrabInstigator) = 0;
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interaction")
-	void ConversationClosed();
-	virtual void ConversationClosed_Implementation() = 0;
+	virtual void Interact_Implementation(AActor* Instigator) = 0;
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interaction")
-	void SetInteractableState(bool bCanShowInteract);
+	void SetInteractableStateGrab(bool bCanShowInteract);
 	virtual void SetInteractableState_Implementation(bool bCanShowInteract) = 0;
 };
