@@ -7,22 +7,22 @@
 #include "ProceduralMeshComponent.h"
 #include "SC_Darkness.generated.h"
 
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class GRUPPONION_API USC_Darkness : public USceneComponent
 {
 	GENERATED_BODY()
 
 public:	
-	// Constructor
+	// Sets default values for this component's properties
 	USC_Darkness();
+
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
 	// Procedural mesh component to represent the darkness
