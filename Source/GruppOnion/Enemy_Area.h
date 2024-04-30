@@ -6,6 +6,7 @@
 #include "Components/BoxComponent.h"
 #include "GameFramework/Actor.h"
 #include "Components/DecalComponent.h"
+#include "Enemy.h"
 #include "Enemy_Area.generated.h"
 
 UCLASS()
@@ -24,6 +25,16 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
+
+	void SpawnDarkness();
+	void RemoveDarkness();
+
+	void SpawnEnemy();
+	void RemoveEnemy();
+
+	void SpawnRock();
+
+	
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Decal", meta = (AllowPrivateAccess = "true"))
 	UDecalComponent* DecalComponent;
@@ -46,5 +57,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Components")
 	FRotator BoxRotation;
 
+	UPROPERTY(EditAnywhere, Category = "Enemy")
+	TSubclassOf<AEnemy> Enemy;
 
 };

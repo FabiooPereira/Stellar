@@ -27,7 +27,49 @@ AEnemy_Area::AEnemy_Area()
 void AEnemy_Area::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	SpawnRock();
+}
+
+void AEnemy_Area::SpawnDarkness()
+{
+	SpawnEnemy();
+}
+
+void AEnemy_Area::RemoveDarkness()
+{
+	RemoveEnemy();
+}
+
+#include "Enemy.h" // Include the header file of your Enemy class
+
+void AEnemy_Area::SpawnEnemy()
+{
+	// Get the bounds of the box collider
+	FVector BoxExtent = BoxComponent->GetScaledBoxExtent(); // Replace MyBoxCollider with the name of your box collider variable
+
+	// Get the location of the box collider
+	FVector BoxLocation = BoxComponent->GetComponentLocation(); // Replace MyBoxCollider with the name of your box collider variable
+
+	// Generate a random location within the bounds of the box collider
+	FVector RandomLocation = FMath::RandPointInBox(FBox(BoxLocation - BoxExtent, BoxLocation + BoxExtent));
+
+	// Spawn the Enemy object at the random location
+	AEnemy* NewEnemy = GetWorld()->SpawnActor<AEnemy>(Enemy, RandomLocation, FRotator::ZeroRotator); // Replace EnemyClass with the class of your Enemy object
+
+	// Optionally, you can set up additional properties of the spawned Enemy here
+	if (NewEnemy)
+	{
+		// Set any additional properties of the spawned Enemy
+	}
+}
+
+
+void AEnemy_Area::RemoveEnemy()
+{
+}
+
+void AEnemy_Area::SpawnRock()
+{
 }
 
 // Called every frame
