@@ -15,5 +15,8 @@ class GRUPPONION_API AEnemy_AIController : public AAIController
 	GENERATED_BODY()
 
 public:
-	explicit AEnemy_AIController(const FObjectInitializer& ObjectInitializer);
+	explicit AEnemy_AIController(FObjectInitializer const& ObjectInitializer);
+
+protected:
+	virtual void OnPossess(APawn* InPawn) override;
 };
