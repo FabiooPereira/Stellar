@@ -26,11 +26,16 @@ protected:
 
 private:
 
+	UFUNCTION(BlueprintCallable, Category="Darkness")
 	void SpawnDarkness();
+	
+	UFUNCTION(BlueprintCallable, Category="Darkness")
 	void RemoveDarkness();
 
 	void SpawnEnemy();
 	void RemoveEnemy();
+	FVector GetRandomPointInVolume(float ZOffset = 0.f);
+	bool PerformRaycast(FHitResult& OutHit);
 
 	void SpawnRock();
 
@@ -47,7 +52,7 @@ private:
 	
 	UPROPERTY(EditAnywhere, Category = "Decal")
 	UMaterialInterface* DecalMaterial;
-
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UBoxComponent* BoxComponent;
 
@@ -59,5 +64,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Enemy")
 	TSubclassOf<AEnemy> Enemy;
+
+	AEnemy* CurrentEnemy = nullptr;
 
 };

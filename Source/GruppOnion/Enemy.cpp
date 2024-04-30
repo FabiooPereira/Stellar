@@ -34,3 +34,16 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
+void AEnemy::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	// Check the reason for ending play (optional)
+	if (EndPlayReason == EEndPlayReason::Destroyed)
+	{
+		// Trigger your despawn animation or effect here
+    	Destroy();
+	}
+}
+
+
