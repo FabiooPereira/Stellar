@@ -57,6 +57,8 @@ void AEnemy_Area::SpawnEnemy()
 	float GroundOffset = 90; // Adjust this as needed
     
 	FHitResult Hit;
+
+	
 	if (PerformRaycast(Hit)) { 
 		FRotator RandomRotation(0.0f, FMath::FRandRange(0.0f, 360.0f), 0.0f);
 		FVector SpawnLocation = Hit.Location + FVector(0, 0, GroundOffset);
