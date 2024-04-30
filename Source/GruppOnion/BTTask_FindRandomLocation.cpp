@@ -3,6 +3,7 @@
 
 #include "BTTask_FindRandomLocation.h"
 #include "Enemy_AIController.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "NavigationSystem.h"
 
 UBTTask_FindRandomLocation::UBTTask_FindRandomLocation(FObjectInitializer const& ObjectInitializer)
@@ -30,8 +31,8 @@ EBTNodeResult::Type UBTTask_FindRandomLocation::ExecuteTask(UBehaviorTreeCompone
 				return EBTNodeResult::Succeeded;
 			}
 		}
-			
-		return EBTNodeResult::Failed;
 	}
+	return EBTNodeResult::Failed;
+
 }
 	
