@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BehaviorTree/BehaviorTree.h"
 #include "GameFramework/Character.h"
 #include "Enemy.generated.h"
 
@@ -15,9 +16,14 @@ public:
 	// Sets default values for this character's properties
 	AEnemy();
 
+	UBehaviorTree* GetBehaviorTree() const;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta=(AllowPrivateAccess="true"))
+	UBehaviorTree* BehaviorTree;
 
 public:	
 	// Called every frame
@@ -29,8 +35,5 @@ public:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 private:
-
-	UPROPERTY(EditAnywhere, Category = "Mesh")
-	UStaticMeshComponent* EnemyMesh;
 
 };

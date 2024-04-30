@@ -9,8 +9,6 @@ AEnemy::AEnemy()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	EnemyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Enemy Mesh"));
-	EnemyMesh->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -33,6 +31,13 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
+
+
+UBehaviorTree* AEnemy::GetBehaviorTree() const
+{
+	return BehaviorTree;
+}
+
 
 void AEnemy::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
