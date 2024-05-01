@@ -28,11 +28,15 @@ class GRUPPONION_API AAICompanionController : public AAIController
 public:
 	ACharacter* PlayerCharacter;
 	float FollowDistance = 400.0f; // Limit for how close it can get to the PlayerCharacter
-
+	float DistanceToGetCompanionFocus = 300.0f;
 	FTimerHandle IdleTimeLimitHandle;
 	float IdleTimeLimit = 3.0;
 	FTimerHandle RandomMoveTimerHandle;
 	FTimerHandle WanderingTimerHandle;
+	FTimerHandle StartledTimerHandle;
+	FTimerHandle WanderingAroundPlayerTimerHandle;
+
+	float MaxStartledTime = 2.0;
 
 	AActor* DarknessActorRef;
 
@@ -60,8 +64,10 @@ public:
 	void WanderAroundPlayerState();
 	void StartledState();
 	//-------------------------------HelpMethods-------------------------------//
+	void StartWanderAroundPlayer();
 	void StartWandering();
-	void SetRandomLocationTimer();
+	void StartIdle();
+	//void SetRandomLocationTimer();
 	void ChooseNewRandomLocation();
 	void WanderNewRandomLocation();
 	void CheckForDarknessOverlap();
@@ -69,6 +75,9 @@ public:
 	bool IsRunningAway = false;
 
 private:
+	void CheckIfShouldFocusPlayer();
+
+	
 	float MaxDistanceAllowedFromPlayer = 600.0f;
 
 	bool bShouldFollowPlayer = true;
