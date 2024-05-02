@@ -74,7 +74,7 @@ void AAICompanionController::ContinueFollowPlayer()
 //-------------------------------------------------States-------------------------------------------------------------//
 void AAICompanionController::SetState(EAICompanionState NewState)
 {
-	CurrentState = NewState;
+	
 	switch (NewState)
 	{
 	case EAICompanionState::Idle:
@@ -86,6 +86,7 @@ void AAICompanionController::SetState(EAICompanionState NewState)
 		break;
 	case EAICompanionState::WanderAround:
 		UE_LOG(LogTemp, Warning, TEXT("Transition into WanderAround"))
+		GetWorldTimerManager().ClearTimer(WanderingAroundPlayerTimerHandle);
 		break;
 	case EAICompanionState::FollowPlayer:
 		UE_LOG(LogTemp, Warning, TEXT("Transition into FollowState"))
@@ -98,7 +99,7 @@ void AAICompanionController::SetState(EAICompanionState NewState)
 		//Potentialbug
 		// GetWorldTimerManager().SetTimer(RandomMoveTimerHandle, this, &AAICompanionController::ChooseNewRandomLocation,
 		// 								3.0f, false);
-		GetWorldTimerManager().ClearTimer(RandomMoveTimerHandle);
+		//GetWorldTimerManager().ClearTimer(RandomMoveTimerHandle);
 		break;
 	case EAICompanionState::Startled:
 		UE_LOG(LogTemp, Warning, TEXT("Transition into Startled"))
@@ -106,20 +107,24 @@ void AAICompanionController::SetState(EAICompanionState NewState)
 		GetWorldTimerManager().ClearTimer(WanderingTimerHandle);
 		break;
 	}
+	CurrentState = NewState;
 }
 
 void AAICompanionController::IdleState()
 {
+	IsRunningAway = false;
 	InitialIdlePosition = GetPawn()->GetActorLocation();
 	//Draws a sphere that shows how close the player should be to get the companions Attention.
 	DrawDebugSphere(GetWorld(), GetPawn()->GetActorLocation(), 300, 12, FColor::Green, false, -1);
-	CheckIfShouldFocusPlayer();
+	
 	//Sets a timer to change current state within a certain time.
 	if (!GetWorldTimerManager().IsTimerActive(IdleTimeLimitHandle))
 	{
+		UE_LOG(LogTemp,Warning, TEXT("IdleToWanderTransition is set"));
 		GetWorldTimerManager().SetTimer(IdleTimeLimitHandle, this, &AAICompanionController::StartWandering,
 		                                IdleTimeLimit, false);
 	}
+	CheckIfShouldFocusPlayer();
 }
 
 void AAICompanionController::WanderState()
@@ -171,17 +176,7 @@ void AAICompanionController::FollowPlayerState()
 
 	// Move the AI towards the player
 	//MoveToActor(PlayerCharacter, 150,true, true,true,0,true);
-	if (CurrentDistanceToPlayer <= 200)
-	{
-		//SetState(EAICompanionState::WanderAroundPlayer);
-		
-		if(!GetWorldTimerManager().IsTimerActive(WanderingAroundPlayerTimerHandle))
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Wandering timer handle has been set"));
-		GetWorldTimerManager().SetTimer(WanderingAroundPlayerTimerHandle,this,&AAICompanionController::StartWanderAroundPlayer,3,false);
-		}
-	}
-	if(CurrentDistanceToPlayer>400)
+	if(CurrentDistanceToPlayer>300)
 	{
 		FVector DirectionToPlayer = (PlayerCharacter->GetActorLocation() - GetPawn()->GetActorLocation()).GetSafeNormal();
 		FVector TargetLocation = PlayerCharacter->GetActorLocation() - DirectionToPlayer * 150.0f;
@@ -192,6 +187,16 @@ void AAICompanionController::FollowPlayerState()
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Wandering timer handle has been cleared"));
 		GetWorldTimerManager().ClearTimer(WanderingAroundPlayerTimerHandle);
+		}
+	}
+	if (CurrentDistanceToPlayer <= 200)
+	{
+		//SetState(EAICompanionState::WanderAroundPlayer);
+		
+		if(!GetWorldTimerManager().IsTimerActive(WanderingAroundPlayerTimerHandle))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Wandering timer handle has been set"));
+		GetWorldTimerManager().SetTimer(WanderingAroundPlayerTimerHandle,this,&AAICompanionController::StartWanderAroundPlayer,3,false);
 		}
 	}
 }
@@ -256,6 +261,7 @@ void AAICompanionController::CheckIfShouldFocusPlayer()
 	float CurrentDistanceToPlayer = FVector::Dist(GetPawn()->GetActorLocation(), PlayerCharacter->GetActorLocation());
 	if (CurrentDistanceToPlayer < DistanceToGetCompanionFocus)
 	{
+		GetWorldTimerManager().ClearTimer(IdleTimeLimitHandle);
 		SetState(EAICompanionState::FollowPlayer);
 	}
 }
@@ -278,7 +284,11 @@ void AAICompanionController::StartledState()
 		MoveToLocation(TargetLocation);
 	}
 	float DistanceToTarget = FVector::Dist(GetPawn()->GetActorLocation(), DarknessActorRef->GetActorLocation());
-	GetWorldTimerManager().SetTimer(StartledTimerHandle, this, &AAICompanionController::StartIdle, MaxStartledTime, false);
+	if(!GetWorldTimerManager().IsTimerActive(StartledTimerHandle))
+	{
+		GetWorldTimerManager().SetTimer(StartledTimerHandle, this, &AAICompanionController::StartIdle, MaxStartledTime, false);
+	}
+	
 	if (DistanceToTarget >= 1000)
 	{
 		SetState(EAICompanionState::Idle);
@@ -293,6 +303,7 @@ void AAICompanionController::StartWanderAroundPlayer()
 
 void AAICompanionController::StartIdle()
 {
+	IsRunningAway = false;
 	UE_LOG(LogTemp, Warning, TEXT("Idle timer has been set"))
 	SetState(EAICompanionState::Idle);
 }
