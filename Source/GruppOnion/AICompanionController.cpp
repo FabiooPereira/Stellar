@@ -132,13 +132,14 @@ void AAICompanionController::WanderState()
 	
 	//Draws a sphere that shows how close the player should be to get the companions Attention.
 	DrawDebugSphere(GetWorld(), GetPawn()->GetActorLocation(), 300, 12, FColor::Green, false, -1);
-	CheckIfShouldFocusPlayer();
+	
 	//Sets a timer so the companion can go to different random locations
 	if (!GetWorldTimerManager().IsTimerActive(WanderingTimerHandle))
 	{
 		GetWorldTimerManager().SetTimer(WanderingTimerHandle, this, &AAICompanionController::WanderNewRandomLocation,
 		                                FMath::RandRange(2.0f, 5.0f), false);
 	}
+	CheckIfShouldFocusPlayer();
 }
 
 void AAICompanionController::WanderNewRandomLocation()
@@ -207,14 +208,15 @@ void AAICompanionController::WanderAroundPlayerState()
 	DrawDebugSphere(GetWorld(), PlayerCharacter->GetActorLocation(), MaxDistanceAllowedFromPlayer, 12, FColor::Green, false, -1);
 
 	float CurrentDistanceToPlayer = FVector::Dist(GetPawn()->GetActorLocation(), PlayerCharacter->GetActorLocation());
-	if (CurrentDistanceToPlayer > MaxDistanceAllowedFromPlayer)
-	{
-		SetState(EAICompanionState::FollowPlayer);
-	}
+	
 	if (!GetWorldTimerManager().IsTimerActive(RandomMoveTimerHandle))
 	{
 		GetWorldTimerManager().SetTimer(RandomMoveTimerHandle, this, &AAICompanionController::ChooseNewRandomLocation,
 		                                FMath::RandRange(2.0f, 5.0f), false);
+	}
+	if (CurrentDistanceToPlayer > MaxDistanceAllowedFromPlayer)
+	{
+		SetState(EAICompanionState::FollowPlayer);
 	}
 }
 
