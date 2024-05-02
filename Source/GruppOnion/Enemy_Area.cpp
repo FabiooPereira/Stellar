@@ -90,7 +90,7 @@ void AEnemy_Area::RemoveEnemy()
 }
 
 
-FVector AEnemy_Area::GetRandomPointInVolume(float ZOffset)
+FVector AEnemy_Area::GetRandomPointInVolume()
 {
 	float BorderOffset = 50; // Adjust the offset as needed
 	
@@ -103,7 +103,7 @@ FVector AEnemy_Area::GetRandomPointInVolume(float ZOffset)
 	float SpawnZ = ActorLocation.Z;
 
 	//Raycast from the actor to the landscape
-	FVector FinalLocation = ActorLocation + FVector(SpawnX, SpawnY, SpawnZ + ZOffset);
+	FVector FinalLocation = ActorLocation + FVector(SpawnX, SpawnY, SpawnZ);
 	return FinalLocation;
 }
 
@@ -123,8 +123,9 @@ bool AEnemy_Area::PerformRaycast(FHitResult& OutHit)
 	FCollisionQueryParams CollisionParams(FName(TEXT("FoliageClusterPlacementTrace")), true, this);
 	CollisionParams.bReturnPhysicalMaterial = true;
 
-	FVector StartLocation = GetRandomPointInVolume(1000);  // Assume 1000 units above the volume
-	FVector EndLocation = GetRandomPointInVolume(-1000);   // Assume 1000 units below the volume
+	FVector RandomPoint = GetRandomPointInVolume();
+	FVector StartLocation = FVector(RandomPoint.X, RandomPoint.Y, RandomPoint.Z); // Assume 1000 units above the volume
+	FVector EndLocation = GetRandomPointInVolume();   // Assume 1000 units below the volume
 
 	return Landscape->ActorLineTraceSingle(OutHit, StartLocation, EndLocation, ECC_Visibility, CollisionParams);
 }

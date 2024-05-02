@@ -34,7 +34,7 @@ private:
 
 	void SpawnEnemy();
 	void RemoveEnemy();
-	FVector GetRandomPointInVolume(float ZOffset = 0.f);
+	FVector GetRandomPointInVolume();
 	bool PerformRaycast(FHitResult& OutHit);
 
 	void SpawnRock();
