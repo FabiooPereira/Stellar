@@ -57,8 +57,6 @@ void AEnemy_Area::SpawnEnemy()
 	float GroundOffset = 90; // Adjust this as needed
     
 	FHitResult Hit;
-
-	
 	if (PerformRaycast(Hit)) { 
 		FRotator RandomRotation(0.0f, FMath::FRandRange(0.0f, 360.0f), 0.0f);
 		FVector SpawnLocation = Hit.Location + FVector(0, 0, GroundOffset);
@@ -112,8 +110,11 @@ FVector AEnemy_Area::GetRandomPointInVolume(float ZOffset)
 bool AEnemy_Area::PerformRaycast(FHitResult& OutHit)
 {
 	UWorld* world = GetWorld();
-	if (world == nullptr) return false;
-
+	if (world == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("There's no Landsacpe in the world!"));
+		return false;
+	}
 	// Find the active landscape
 	TActorIterator<ALandscape> LandscapeIterator(world);
 	if (!LandscapeIterator) return false; // Proper check for iterator validity
