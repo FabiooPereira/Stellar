@@ -4,6 +4,8 @@
 #include "Enemy_Area.h"
 #include "Landscape.h"
 #include "EngineUtils.h"
+#include "DrawDebugHelpers.h"
+
 
 
 // Sets default values
@@ -110,11 +112,7 @@ FVector AEnemy_Area::GetRandomPointInVolume(float ZOffset)
 bool AEnemy_Area::PerformRaycast(FHitResult& OutHit)
 {
 	UWorld* world = GetWorld();
-	if (world == nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("There's no Landsacpe in the world!"));
-		return false;
-	}
+
 	// Find the active landscape
 	TActorIterator<ALandscape> LandscapeIterator(world);
 	if (!LandscapeIterator) return false; // Proper check for iterator validity
@@ -126,8 +124,19 @@ bool AEnemy_Area::PerformRaycast(FHitResult& OutHit)
 	FVector StartLocation = GetRandomPointInVolume(1000);  // Assume 1000 units above the volume
 	FVector EndLocation = GetRandomPointInVolume(-1000);   // Assume 1000 units below the volume
 
-	return Landscape->ActorLineTraceSingle(OutHit, StartLocation, EndLocation, ECC_Visibility, CollisionParams);
+	// Perform the raycast
+	bool bHitSuccess = Landscape->ActorLineTraceSingle(OutHit, StartLocation, EndLocation, ECC_Visibility, CollisionParams);
+
+	// Draw debug line
+	FColor LineColor = bHitSuccess ? FColor::Green : FColor::Red; // Green if hit, red if no hit
+	float LineDuration = 5.0f; // Duration the line should stay visible (seconds)
+	bool bPersistentLines = false; // Set to true if you want the line to stay indefinitely
+	DrawDebugLine(world, StartLocation, EndLocation, LineColor, bPersistentLines, LineDuration, 0, 5.0f);
+
+	UE_LOG(LogTemp, Warning, TEXT("Raycast %s"), bHitSuccess ? TEXT("succeeded") : TEXT("failed"));
+	return bHitSuccess;
 }
+
 
 void AEnemy_Area::SpawnRock()
 {
