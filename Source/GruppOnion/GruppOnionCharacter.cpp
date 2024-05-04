@@ -119,6 +119,8 @@ void AGruppOnionCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 void AGruppOnionCharacter::Move(const FInputActionValue& Value)
 {
+	//UE_LOG(LogTemplateCharacter, Log, TEXT("Move function called."));
+
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
 
