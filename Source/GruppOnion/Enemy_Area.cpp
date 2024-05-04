@@ -3,9 +3,8 @@
 
 #include "Enemy_Area.h"
 #include "Landscape.h"
-#include "EngineUtils.h"
 #include "DrawDebugHelpers.h"
-
+#include "Enemy.h"
 
 
 // Sets default values
@@ -52,20 +51,15 @@ void AEnemy_Area::RemoveDarkness()
 		DecalComponent->SetVisibility(false);
 	}}
 
-#include "Enemy.h" // Include the header file of your Enemy class
 
 void AEnemy_Area::SpawnEnemy()
 {
-	float GroundOffset = 90; // Adjust this as needed
-    
-	FHitResult Hit;
-	if (PerformRaycast(Hit)) { 
-		FRotator RandomRotation(0.0f, FMath::FRandRange(0.0f, 360.0f), 0.0f);
-		FVector SpawnLocation = Hit.Location + FVector(0, 0, GroundOffset);
-
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-		CurrentEnemy = GetWorld()->SpawnActor<AEnemy>(Enemy, SpawnLocation, RandomRotation, SpawnParams);
+	FRotator RandomRotation(0.0f, FMath::FRandRange(0.0f, 360.0f), 0.0f);
+	FVector SpawnLocation = GetRandomPointOnLandscape();
+	
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	CurrentEnemy = GetWorld()->SpawnActor<AEnemy>(Enemy, SpawnLocation, RandomRotation, SpawnParams);
 
 		if (CurrentEnemy != nullptr) {
 			UE_LOG(LogTemp, Warning, TEXT("Enemy spawned"));
@@ -73,10 +67,6 @@ void AEnemy_Area::SpawnEnemy()
 		else {
 			UE_LOG(LogTemp, Warning, TEXT("Enemy not spawned"));
 		}
-	}
-	else {
-		UE_LOG(LogTemp, Warning, TEXT("Raycast failed or no landscape found"));
-	}
 }
 
 
@@ -91,51 +81,46 @@ void AEnemy_Area::RemoveEnemy()
 	}
 }
 
-
-FVector AEnemy_Area::GetRandomPointInVolume(float ZOffset)
+FVector AEnemy_Area::GetRandomPointOnLandscape()
 {
-	float BorderOffset = 50; // Adjust the offset as needed
-	
+	FHitResult OutHit;
+	UWorld* World = GetWorld();
+	ALandscape* Landscape = World->SpawnActor<ALandscape>();
 	FVector BoxExtent = BoxComponent->GetScaledBoxExtent();
-	FVector ActorLocation = GetActorLocation();
+	
+	// Generate random X and Y coordinates within the box extent with border offset
+	FVector RandomOffset = FVector(
+		FMath::FRandRange(-BoxExtent.X + BorderOffset, BoxExtent.X - BorderOffset),
+		FMath::FRandRange(-BoxExtent.Y + BorderOffset, BoxExtent.Y - BorderOffset),
+		GetActorLocation().Z
+	) + GetActorLocation();
+    
+	// Define start and end locations for the raycast
+	FVector StartLocation = RandomOffset + FVector(0,0,1000);
+	FVector EndLocation = RandomOffset + FVector(0,0,-1000);
 
-	// Generate random X and Y coordinates relative to the actor's current position
-	float SpawnX = FMath::FRandRange(-BoxExtent.X+BorderOffset, BoxExtent.X-BorderOffset);
-	float SpawnY = FMath::FRandRange(-BoxExtent.Y+BorderOffset, BoxExtent.Y-BorderOffset);
-	float SpawnZ = ActorLocation.Z;
-
-	//Raycast from the actor to the landscape
-	FVector FinalLocation = ActorLocation + FVector(SpawnX, SpawnY, SpawnZ + ZOffset);
-	return FinalLocation;
-}
-
-bool AEnemy_Area::PerformRaycast(FHitResult& OutHit)
-{
-	UWorld* world = GetWorld();
-
-	// Find the active landscape
-	TActorIterator<ALandscape> LandscapeIterator(world);
-	if (!LandscapeIterator) return false; // Proper check for iterator validity
-	ALandscape* Landscape = *LandscapeIterator;
-
-	FCollisionQueryParams CollisionParams(FName(TEXT("FoliageClusterPlacementTrace")), true, this);
-	CollisionParams.bReturnPhysicalMaterial = true;
-
-	FVector StartLocation = GetRandomPointInVolume(1000);  // Assume 1000 units above the volume
-	FVector EndLocation = GetRandomPointInVolume(-1000);   // Assume 1000 units below the volume
-
+	// Set up collision query parameters
+	FCollisionQueryParams CollisionParams(FName(TEXT("GetPointOnLandscape")), true, this);
+	
 	// Perform the raycast
-	bool bHitSuccess = Landscape->ActorLineTraceSingle(OutHit, StartLocation, EndLocation, ECC_Visibility, CollisionParams);
+	
+	if(bool bHitSuccess = World->LineTraceSingleByChannel(OutHit, StartLocation, EndLocation, ECC_WorldStatic, CollisionParams))
+	{
+		return OutHit.Location + FVector(0, 0, GroundOffset);
+	}
+	else
+	{
+		return FVector(0,0,0);
+		//UE_LOG(LogTemp, Warning, TEXT("Raycast Failed"));
+	}
+		
 
 	// Draw debug line
-	FColor LineColor = bHitSuccess ? FColor::Green : FColor::Red; // Green if hit, red if no hit
-	float LineDuration = 5.0f; // Duration the line should stay visible (seconds)
-	bool bPersistentLines = false; // Set to true if you want the line to stay indefinitely
-	DrawDebugLine(world, StartLocation, EndLocation, LineColor, bPersistentLines, LineDuration, 0, 5.0f);
-
-	UE_LOG(LogTemp, Warning, TEXT("Raycast %s"), bHitSuccess ? TEXT("succeeded") : TEXT("failed"));
-	return bHitSuccess;
+	//FColor LineColor = bHitSuccess ? FColor::Green : FColor::Red; // Green if hit, red if no hit
+	//DrawDebugLine(World, StartLocation, EndLocation, LineColor, false, 5, 0, 5.0f);
+	
 }
+
 
 
 void AEnemy_Area::SpawnRock()
