@@ -31,17 +31,21 @@ private:
 	
 	UFUNCTION(BlueprintCallable, Category="Darkness")
 	void RemoveDarkness();
-
+	
+	UFUNCTION(BlueprintCallable, Category="Enemy")
 	void SpawnEnemy();
+	
+	UFUNCTION(BlueprintCallable, Category="Enemy")
 	void RemoveEnemy();
-	FVector GetRandomPointOnLandscape();
+	
+	FVector GetRandomPointOnLandscape() const;
 
 	void SpawnRock();
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, Category = "Border Config")
 	float BorderOffset = 50; // Adjust if needed, margin for border margin when spawning 
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, Category = "Border Config")
 	float GroundOffset = 90; // Adjust if needed, margin for Z axis when spawning
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Decal", meta = (AllowPrivateAccess = "true"))

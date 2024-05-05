@@ -37,7 +37,7 @@ void AEnemy_Area::BeginPlay()
 
 void AEnemy_Area::SpawnDarkness()
 {
-	RemoveEnemy();
+	//RemoveEnemy();
 	if (DecalComponent)
 	{
 		DecalComponent->SetVisibility(true);
@@ -45,7 +45,7 @@ void AEnemy_Area::SpawnDarkness()
 
 void AEnemy_Area::RemoveDarkness()
 {
-	SpawnEnemy();
+	//SpawnEnemy();
 	if (DecalComponent)
 	{
 		DecalComponent->SetVisibility(false);
@@ -81,7 +81,7 @@ void AEnemy_Area::RemoveEnemy()
 	}
 }
 
-FVector AEnemy_Area::GetRandomPointOnLandscape()
+FVector AEnemy_Area::GetRandomPointOnLandscape() const
 {
 	FHitResult OutHit;
 	UWorld* World = GetWorld();
@@ -104,14 +104,15 @@ FVector AEnemy_Area::GetRandomPointOnLandscape()
 	
 	// Perform the raycast
 	
-	if(bool bHitSuccess = World->LineTraceSingleByChannel(OutHit, StartLocation, EndLocation, ECC_WorldStatic, CollisionParams))
+	if(World->LineTraceSingleByChannel(OutHit, StartLocation, EndLocation, ECC_WorldStatic, CollisionParams))
 	{
+		//UE_LOG(LogTemp, Warning, TEXT("Raycast Success"));
 		return OutHit.Location + FVector(0, 0, GroundOffset);
 	}
 	else
 	{
-		return FVector(0,0,0);
 		//UE_LOG(LogTemp, Warning, TEXT("Raycast Failed"));
+		return FVector(0,0,0);
 	}
 		
 
