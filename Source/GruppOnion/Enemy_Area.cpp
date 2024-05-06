@@ -38,18 +38,20 @@ void AEnemy_Area::BeginPlay()
 void AEnemy_Area::SpawnDarkness()
 {
 	//RemoveEnemy();
-	if (DecalComponent)
-	{
-		DecalComponent->SetVisibility(true);
-	}}
+	// if (DecalComponent)
+	// {
+	// 	DecalComponent->SetVisibility(true);
+	// }
+}
 
 void AEnemy_Area::RemoveDarkness()
 {
 	//SpawnEnemy();
-	if (DecalComponent)
-	{
-		DecalComponent->SetVisibility(false);
-	}}
+	// if (DecalComponent)
+	// {
+	// 	DecalComponent->SetVisibility(false);
+	// }
+}
 
 
 void AEnemy_Area::SpawnEnemy()
