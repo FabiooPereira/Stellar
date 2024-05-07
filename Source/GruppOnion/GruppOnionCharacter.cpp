@@ -65,7 +65,8 @@ void AGruppOnionCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
-
+	CurrentCameraRotation = FollowCamera->GetComponentRotation();
+	TargetCameraRotation = CurrentCameraRotation;
 	//Add Input Mapping Context
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
@@ -116,7 +117,14 @@ void AGruppOnionCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
 	}
 }
-
+ void AGruppOnionCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	FRotator NewCameraRotation = FMath::RInterpTo(CurrentCameraRotation, TargetCameraRotation,DeltaTime, 10);
+	CurrentCameraRotation = NewCameraRotation;
+	UE_LOG(LogTemp,Warning, TEXT("Rotaion %s"), *CurrentCameraRotation.ToString());
+	
+}
 void AGruppOnionCharacter::Move(const FInputActionValue& Value)
 {
 	//UE_LOG(LogTemplateCharacter, Log, TEXT("Move function called."));
@@ -127,8 +135,10 @@ void AGruppOnionCharacter::Move(const FInputActionValue& Value)
 	if (Controller != nullptr && CustomCamera != nullptr)
 	{
 		FRotator CameraRotation = CustomCamera->GetComponentRotation();
+		//FRotator CameraRotation = CurrentCameraRotation;
 		FVector ForwardDirection =FRotationMatrix(CameraRotation).GetUnitAxis(EAxis::X);
 		FVector RightDirection = FRotationMatrix(CameraRotation).GetUnitAxis(EAxis::Y);
+		
 		
 		// // find out which way is forward
 		// const FRotator Rotation = Controller->GetControlRotation();

@@ -60,13 +60,19 @@ protected:
 	class UCameraComponent* CustomCamera; // Pointer to the custom camera component
 
 protected:
+	
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	
+	void Tick(float DeltaTime);
+
 	// To add mapping context
 	virtual void BeginPlay();
 
 public:
+	UPROPERTY(BlueprintReadWrite)
+	FRotator CurrentCameraRotation;
+	UPROPERTY(BlueprintReadWrite)
+	FRotator TargetCameraRotation;
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
