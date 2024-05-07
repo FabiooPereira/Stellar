@@ -33,6 +33,17 @@ AEnemy_Area::AEnemy_Area()
 void AEnemy_Area::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Create a dynamic material instance from the existing material.
+	UMaterialInstanceDynamic* DynMaterialInstance = UMaterialInstanceDynamic::Create(DecalMaterial, this);
+	if (DynMaterialInstance)
+	{
+		// Apply it to the decal component.
+		DecalComponent->SetMaterial(0, DynMaterialInstance);
+
+		// Optionally modify parameters on the dynamic instance.
+		DynMaterialInstance->SetScalarParameterValue(FName(TEXT("Erosion")), 0);
+	}
 }
 
 void AEnemy_Area::SpawnDarkness()

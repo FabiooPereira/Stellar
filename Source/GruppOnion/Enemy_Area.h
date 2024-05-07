@@ -48,7 +48,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Border Config")
 	float GroundOffset = 90; // Adjust if needed, margin for Z axis when spawning
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Decal", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Decal", meta = (AllowPrivateAccess = "true"))
 	UDecalComponent* DecalComponent;
 
 	UPROPERTY(EditAnywhere, Category = "Decal")
