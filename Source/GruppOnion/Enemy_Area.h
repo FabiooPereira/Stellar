@@ -31,15 +31,22 @@ private:
 	
 	UFUNCTION(BlueprintCallable, Category="Darkness")
 	void RemoveDarkness();
-
+	
+	UFUNCTION(BlueprintCallable, Category="Enemy")
 	void SpawnEnemy();
+	
+	UFUNCTION(BlueprintCallable, Category="Enemy")
 	void RemoveEnemy();
-	FVector GetRandomPointInVolume(float ZOffset = 0.f);
-	bool PerformRaycast(FHitResult& OutHit);
+	
+	FVector GetRandomPointOnLandscape() const;
 
 	void SpawnRock();
 
-	
+	UPROPERTY(EditAnywhere, Category = "Border Config")
+	float BorderOffset = 50; // Adjust if needed, margin for border margin when spawning 
+
+	UPROPERTY(EditAnywhere, Category = "Border Config")
+	float GroundOffset = 90; // Adjust if needed, margin for Z axis when spawning
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Decal", meta = (AllowPrivateAccess = "true"))
 	UDecalComponent* DecalComponent;
