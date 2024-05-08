@@ -122,7 +122,7 @@ void AAICompanionController::IdleState()
 	{
 		UE_LOG(LogTemp,Warning, TEXT("IdleToWanderTransition is set"));
 		GetWorldTimerManager().SetTimer(IdleTimeLimitHandle, this, &AAICompanionController::StartWandering,
-		                                IdleTimeLimit, false);
+		                                10, false);
 	}
 	CheckIfShouldFocusPlayer();
 }
