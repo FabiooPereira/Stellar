@@ -64,7 +64,6 @@ void AEnemy_Area::RemoveDarkness()
 	// }
 }
 
-
 void AEnemy_Area::SpawnEnemy()
 {
 	FRotator RandomRotation(0.0f, FMath::FRandRange(0.0f, 360.0f), 0.0f);
@@ -81,8 +80,6 @@ void AEnemy_Area::SpawnEnemy()
 			UE_LOG(LogTemp, Warning, TEXT("Enemy not spawned"));
 		}
 }
-
-
 
 void AEnemy_Area::RemoveEnemy()
 {
