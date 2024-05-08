@@ -14,7 +14,8 @@ enum class EAICompanionState : uint8
 	WanderAround,
 	FollowPlayer,
 	WanderAroundPlayer,
-	Startled
+	Startled,
+	MoveToLocationAndIdleState
 };
 
 /**
@@ -35,13 +36,18 @@ public:
 	FTimerHandle WanderingTimerHandle;
 	FTimerHandle StartledTimerHandle;
 	FTimerHandle WanderingAroundPlayerTimerHandle;
+	FTimerHandle SetStateHandler;
 
+	
 	float MaxStartledTime = 2.0;
 
 	AActor* DarknessActorRef;
 
 
 	FVector InitialIdlePosition;
+
+	FVector TargetToStandOn;
+	bool IsGoingToCommandedTarget;
 
 protected:
 	virtual void BeginPlay() override;
@@ -54,6 +60,8 @@ public:
 	//Functions Player can call for the companion to execute
 	void StopFollowPlayer();
 	void ContinueFollowPlayer();
+	UFUNCTION(BlueprintCallable)
+	void SendToLocation(FVector targetLocation);
 
 	//-------------------------------SetStates----------------------------------//
 	void SetState(EAICompanionState NewState);
@@ -63,6 +71,7 @@ public:
 	void FollowPlayerState();
 	void WanderAroundPlayerState();
 	void StartledState();
+	void GoToCommandedTarget();
 	//-------------------------------HelpMethods-------------------------------//
 	void StartWanderAroundPlayer();
 	void StartWandering();
@@ -73,6 +82,7 @@ public:
 	void CheckForDarknessOverlap();
 	
 	bool IsRunningAway = false;
+	bool CallStayToogle = false;
 
 private:
 	void CheckIfShouldFocusPlayer();
