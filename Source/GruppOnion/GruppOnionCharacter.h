@@ -99,4 +99,5 @@ public:
 	void setActiveCamera(UCameraComponent* newCamera);
 
 	void DrawDebugLineToCompanion();
+
 };
