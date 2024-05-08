@@ -299,6 +299,7 @@ void AAICompanionController::CheckIfShouldFocusPlayer()
 	float CurrentDistanceToPlayer = FVector::Dist(GetPawn()->GetActorLocation(), PlayerCharacter->GetActorLocation());
 	if (CurrentDistanceToPlayer < DistanceToGetCompanionFocus)
 	{
+	
 		GetWorldTimerManager().ClearTimer(IdleTimeLimitHandle);
 		MoveToActor(PlayerCharacter, 100, true,true,true
 			,0,true);
