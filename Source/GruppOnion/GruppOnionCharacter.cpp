@@ -122,7 +122,7 @@ void AGruppOnionCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	Super::Tick(DeltaTime);
 	FRotator NewCameraRotation = FMath::RInterpTo(CurrentCameraRotation, TargetCameraRotation,DeltaTime, 10);
 	CurrentCameraRotation = NewCameraRotation;
-	UE_LOG(LogTemp,Warning, TEXT("Rotaion %s"), *CurrentCameraRotation.ToString());
+	//UE_LOG(LogTemp,Warning, TEXT("Rotaion %s"), *CurrentCameraRotation.ToString());
 	
 }
 void AGruppOnionCharacter::Move(const FInputActionValue& Value)
