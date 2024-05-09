@@ -101,12 +101,12 @@ void AAICompanionController::GoToCommandedTarget()
 		if (FVector::Dist(GetPawn()->GetActorLocation(), TargetToStandOn)<100.f)
 		{
 			IsGoingToCommandedTarget=false;
-			if(!GetWorldTimerManager().IsTimerActive(SetStateHandler))
-			{
-				UE_LOG(LogTemp,Warning,TEXT("Transition to Idle timer has been set"))
-				
-			GetWorldTimerManager().SetTimer(SetStateHandler, this,&AAICompanionController::StartIdle, 5,false);
-			}
+			// if(!GetWorldTimerManager().IsTimerActive(SetStateHandler))
+			// {
+			// 	UE_LOG(LogTemp,Warning,TEXT("Transition to Idle timer has been set"))
+			// 	
+			// GetWorldTimerManager().SetTimer(SetStateHandler, this,&AAICompanionController::StartIdle, 5,false);
+			// }
 		}
 		return;
 	}
