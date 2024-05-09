@@ -74,9 +74,10 @@ void AAICompanionController::ContinueFollowPlayer()
 	SetState(EAICompanionState::FollowPlayer);
 }
 
-void AAICompanionController::SendToLocation(FVector targetLocation)
+void AAICompanionController::SendToLocation(FVector targetLocation, bool IsStandingOnButton)
 {
-	if(!CallStayToogle)
+	//CallToLocation
+	if(!CallStayToogle || IsStandingOnButton)
 	{
 		UE_LOG(LogTemp,Warning,TEXT("Stay"))
 		IsGoingToCommandedTarget = false;
