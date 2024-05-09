@@ -82,6 +82,7 @@ public:
 	void CheckForDarknessOverlap();
 	
 	bool IsRunningAway = false;
+	UPROPERTY(BlueprintReadOnly)
 	bool CallStayToogle = false;
 
 private:
