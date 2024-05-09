@@ -74,9 +74,10 @@ void AAICompanionController::ContinueFollowPlayer()
 	SetState(EAICompanionState::FollowPlayer);
 }
 
-void AAICompanionController::SendToLocation(FVector targetLocation)
+void AAICompanionController::SendToLocation(FVector targetLocation, bool IsStandingOnButton)
 {
-	if(!CallStayToogle)
+	//CallToLocation
+	if(!CallStayToogle || IsStandingOnButton)
 	{
 		UE_LOG(LogTemp,Warning,TEXT("Stay"))
 		IsGoingToCommandedTarget = false;
@@ -101,12 +102,12 @@ void AAICompanionController::GoToCommandedTarget()
 		if (FVector::Dist(GetPawn()->GetActorLocation(), TargetToStandOn)<100.f)
 		{
 			IsGoingToCommandedTarget=false;
-			if(!GetWorldTimerManager().IsTimerActive(SetStateHandler))
-			{
-				UE_LOG(LogTemp,Warning,TEXT("Transition to Idle timer has been set"))
-				
-			GetWorldTimerManager().SetTimer(SetStateHandler, this,&AAICompanionController::StartIdle, 5,false);
-			}
+			// if(!GetWorldTimerManager().IsTimerActive(SetStateHandler))
+			// {
+			// 	UE_LOG(LogTemp,Warning,TEXT("Transition to Idle timer has been set"))
+			// 	
+			// GetWorldTimerManager().SetTimer(SetStateHandler, this,&AAICompanionController::StartIdle, 5,false);
+			// }
 		}
 		return;
 	}

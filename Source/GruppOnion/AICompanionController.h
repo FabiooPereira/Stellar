@@ -61,7 +61,7 @@ public:
 	void StopFollowPlayer();
 	void ContinueFollowPlayer();
 	UFUNCTION(BlueprintCallable)
-	void SendToLocation(FVector targetLocation);
+	void SendToLocation(FVector targetLocation, bool IsButton);
 
 	//-------------------------------SetStates----------------------------------//
 	void SetState(EAICompanionState NewState);
