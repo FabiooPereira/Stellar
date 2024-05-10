@@ -8,6 +8,7 @@
 #include "AICompanionController.generated.h"
 
 //Define enum for AI companion states
+UENUM(BlueprintType)
 enum class EAICompanionState : uint8
 {
 	Idle,
@@ -64,6 +65,7 @@ public:
 	void SendToLocation(FVector targetLocation, bool IsButton);
 
 	//-------------------------------SetStates----------------------------------//
+	UFUNCTION(BlueprintCallable)
 	void SetState(EAICompanionState NewState);
 	//---------------------------------States-----------------------------------//
 	void IdleState();
