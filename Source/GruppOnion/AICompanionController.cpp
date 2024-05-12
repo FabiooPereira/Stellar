@@ -74,24 +74,24 @@ void AAICompanionController::ContinueFollowPlayer()
 	SetState(EAICompanionState::FollowPlayer);
 }
 
-void AAICompanionController::SendToLocation(FVector targetLocation, bool IsStandingOnButton)
+void AAICompanionController::CallToLocation(FVector targetLocation)
 {
 	//CallToLocation
-	if(!CallStayToogle || IsStandingOnButton)
-	{
-		UE_LOG(LogTemp,Warning,TEXT("Stay"))
+	// if(IsStandingOnButton)
+	// {
+		UE_LOG(LogTemp,Warning,TEXT("Call to Location"))
 		IsGoingToCommandedTarget = false;
 		TargetToStandOn = targetLocation;
-		CallStayToogle = true;
+		//CallStayToogle = true;
 		//DrawDebugSphere(GetWorld(), targetLocation, 100, 12, FColor::Green, false, 3);
 		SetState(EAICompanionState::MoveToLocationAndIdleState);
-	}else
-	{
-		UE_LOG(LogTemp,Warning,TEXT("Come"))
-		CallStayToogle = false;
-		SetState(EAICompanionState::FollowPlayer);
-	}
-	
+	// }else
+	// {
+	// 	UE_LOG(LogTemp,Warning,TEXT("Come"))
+	// 	CallStayToogle = false;
+	// 	SetState(EAICompanionState::FollowPlayer);
+	// }
+	//
 }
 
 

@@ -62,7 +62,7 @@ public:
 	void StopFollowPlayer();
 	void ContinueFollowPlayer();
 	UFUNCTION(BlueprintCallable)
-	void SendToLocation(FVector targetLocation, bool IsButton);
+	void CallToLocation(FVector targetLocation);
 
 	//-------------------------------SetStates----------------------------------//
 	UFUNCTION(BlueprintCallable)
