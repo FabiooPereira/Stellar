@@ -258,7 +258,7 @@ void AAICompanionController::StartledState()
 		FVector DirectionAwayFromDarkness = GetPawn()->GetActorLocation() - DarknessActorRef->GetActorLocation();
 		DirectionAwayFromDarkness.Normalize();
 
-		FVector TargetLocation = GetPawn()->GetActorLocation() + DirectionAwayFromDarkness * 1000;
+		FVector TargetLocation = GetPawn()->GetActorLocation() + DirectionAwayFromDarkness * 300;
 		//DrawDebugSphere(GetWorld(), TargetLocation, 50.0f, 12, FColor::Green, false, 5.0f);
 
 		MoveToLocation(TargetLocation);
@@ -270,7 +270,7 @@ void AAICompanionController::StartledState()
 		GetWorldTimerManager().SetTimer(StartledTimerHandle, this, &AAICompanionController::StartIdle, MaxStartledTime, false);
 	}
 	
-	if (DistanceToTarget >= 1000)
+	if (DistanceToTarget >= 300)
 	{
 		SetState(EAICompanionState::Idle);
 		IsRunningAway = false;
@@ -293,11 +293,21 @@ void AAICompanionController::CheckForDarknessOverlap()
 
 	for (AActor* OverlappingActor : OverlappingActors)
 	{
-		if (OverlappingActor->ActorHasTag("Darkness") && CurrentState != EAICompanionState::Startled)
+		for(auto c:OverlappingActor->GetComponents())
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Alpaca Is Inside Darkness"))
-			DarknessActorRef = OverlappingActor;
-			SetState(EAICompanionState::Startled);
+			if(c->ComponentHasTag("Darkness"))
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Alpaca Is Inside Darkness"))
+				DarknessActorRef = OverlappingActor;
+				SetState(EAICompanionState::Startled);
+			}
 		}
+		//
+		// if (OverlappingActor->ActorHasTag("Darkness") && CurrentState != EAICompanionState::Startled)
+		// {
+		// 	UE_LOG(LogTemp, Warning, TEXT("Alpaca Is Inside Darkness"))
+		// 	DarknessActorRef = OverlappingActor;
+		// 	SetState(EAICompanionState::Startled);
+		// }
 	}
 }
