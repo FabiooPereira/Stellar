@@ -85,7 +85,7 @@ void AGruppOnionCharacter::BeginPlay()
 		AAICompanionController* CompanionController = Cast<AAICompanionController>(AICompanionActor->GetInstigatorController());
 		if(CompanionController)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Succes"))
+			UE_LOG(LogTemp, Warning, TEXT("Succes"));
 			CurrentAIController = CompanionController;
 		}
 	}
@@ -174,11 +174,11 @@ void AGruppOnionCharacter::StayCompanion()
 {
 	if (CurrentAIController)
 	{
-		CurrentAIController->StopFollowPlayer();
+		//CurrentAIController->StopFollowPlayer();
 	}
 	else
 	{
-		UE_LOG(LogTemp,Warning,TEXT("NUllptr"))
+		UE_LOG(LogTemp,Warning,TEXT("NUllptr"));
 	}
 	
 }
@@ -187,7 +187,7 @@ void AGruppOnionCharacter::CallCompanion()
 	
 	if (CurrentAIController)
 	{
-	CurrentAIController->ContinueFollowPlayer();
+	//CurrentAIController->ContinueFollowPlayer();
 	}else
 	{
 		UE_LOG(LogTemp,Warning,TEXT("NUllptr"));
