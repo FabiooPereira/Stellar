@@ -137,8 +137,12 @@ void AGruppOnionCharacter::Move(const FInputActionValue& Value)
 		FRotator CameraRotation = CustomCamera->GetComponentRotation();
 		//FRotator CameraRotation = CurrentCameraRotation;
 		FVector ForwardDirection =FRotationMatrix(CameraRotation).GetUnitAxis(EAxis::X);
-		FVector RightDirection = FRotationMatrix(CameraRotation).GetUnitAxis(EAxis::Y);
+
+		ForwardDirection.Z=0.f;
+		ForwardDirection.Normalize();
 		
+		//FVector RightDirection = FRotationMatrix(CameraRotation).GetUnitAxis(EAxis::Y);
+		FVector RightDirection = FVector::CrossProduct( FVector::UpVector,ForwardDirection);
 		
 		// // find out which way is forward
 		// const FRotator Rotation = Controller->GetControlRotation();
