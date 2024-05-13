@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/Actor.h"
-#include "Materials/MaterialInstanceDynamic.h"
+#include "Components/DecalComponent.h"
 #include "Enemy.h"
 #include "Enemy_Area.generated.h"
 
