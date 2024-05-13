@@ -83,7 +83,7 @@ void AAICompanionController::SendToLocation(FVector targetLocation, bool IsStand
 		IsGoingToCommandedTarget = false;
 		TargetToStandOn = targetLocation;
 		CallStayToogle = true;
-		//DrawDebugSphere(GetWorld(), targetLocation, 100, 12, FColor::Green, false, 3);
+		DrawDebugSphere(GetWorld(), targetLocation, 100, 12, FColor::Green, false, 3);
 		SetState(EAICompanionState::MoveToLocationAndIdleState);
 	}else
 	{
@@ -183,7 +183,7 @@ void AAICompanionController::WanderState()
 {
 	
 	//Draws a sphere that shows how close the player should be to get the companions Attention.
-	//DrawDebugSphere(GetWorld(), GetPawn()->GetActorLocation(), 300, 12, FColor::Green, false, -1);
+	DrawDebugSphere(GetWorld(), GetPawn()->GetActorLocation(), 300, 12, FColor::Green, false, -1);
 	
 	//Sets a timer so the companion can go to different random locations
 	if (!GetWorldTimerManager().IsTimerActive(WanderingTimerHandle))
@@ -201,7 +201,7 @@ void AAICompanionController::WanderNewRandomLocation()
 	FVector RandomLocation = FVector(RandomLocation2D.X, RandomLocation2D.Y, 0.0f) + InitialIdlePosition;
 
 	//Draws sphere to the next targetLocation
-	//DrawDebugSphere(GetWorld(), RandomLocation, 50.0f, 12, FColor::Green, false, 5.0f);
+	DrawDebugSphere(GetWorld(), RandomLocation, 50.0f, 12, FColor::Green, false, 5.0f);
 
 	// Move to the random location
 	MoveToLocation(RandomLocation);
@@ -227,22 +227,22 @@ void AAICompanionController::FollowPlayerState()
 		GetWorldTimerManager().ClearTimer(WanderingAroundPlayerTimerHandle);
 		}
 	}
-	// if (CurrentDistanceToPlayer <= 200)
-	// {
-	// 	//SetState(EAICompanionState::WanderAroundPlayer);
-	// 	
-	// 	if(!GetWorldTimerManager().IsTimerActive(WanderingAroundPlayerTimerHandle))
-	// 	{
-	// 		UE_LOG(LogTemp, Warning, TEXT("Wandering timer handle has been set"));
-	// 	GetWorldTimerManager().SetTimer(WanderingAroundPlayerTimerHandle,this,&AAICompanionController::StartWanderAroundPlayer,5,false);
-	// 	}
-	// }
+	if (CurrentDistanceToPlayer <= 200)
+	{
+		//SetState(EAICompanionState::WanderAroundPlayer);
+		
+		if(!GetWorldTimerManager().IsTimerActive(WanderingAroundPlayerTimerHandle))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Wandering timer handle has been set"));
+		GetWorldTimerManager().SetTimer(WanderingAroundPlayerTimerHandle,this,&AAICompanionController::StartWanderAroundPlayer,5,false);
+		}
+	}
 }
 
 void AAICompanionController::WanderAroundPlayerState()
 {
 	//Draws a sphere around player to represent the limit for how far the companion can be from the player.
-	//DrawDebugSphere(GetWorld(), PlayerCharacter->GetActorLocation(), MaxDistanceAllowedFromPlayer, 12, FColor::Green, false, -1);
+	DrawDebugSphere(GetWorld(), PlayerCharacter->GetActorLocation(), MaxDistanceAllowedFromPlayer, 12, FColor::Green, false, -1);
 
 	float CurrentDistanceToPlayer = FVector::Dist(GetPawn()->GetActorLocation(), PlayerCharacter->GetActorLocation());
 	
@@ -288,7 +288,7 @@ void AAICompanionController::ChooseNewRandomLocation()
 		}
 
 		//Draws sphere to next targetLocation
-		//DrawDebugSphere(GetWorld(), RandomLocation, 50.0f, 12, FColor::Green, false, 5.0f);
+		DrawDebugSphere(GetWorld(), RandomLocation, 50.0f, 12, FColor::Green, false, 5.0f);
 
 		// Move to the random location
 		MoveToLocation(RandomLocation);
@@ -321,7 +321,7 @@ void AAICompanionController::StartledState()
 		DirectionAwayFromDarkness.Normalize();
 
 		FVector TargetLocation = GetPawn()->GetActorLocation() + DirectionAwayFromDarkness * 1000;
-		//DrawDebugSphere(GetWorld(), TargetLocation, 50.0f, 12, FColor::Green, false, 5.0f);
+		DrawDebugSphere(GetWorld(), TargetLocation, 50.0f, 12, FColor::Green, false, 5.0f);
 
 		MoveToLocation(TargetLocation);
 	}
