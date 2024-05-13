@@ -5,6 +5,7 @@
 #include "Landscape.h"
 #include "DrawDebugHelpers.h"
 #include "Enemy.h"
+#include "Components/DecalComponent.h"
 
 
 // Sets default values
@@ -34,15 +35,19 @@ void AEnemy_Area::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Create a dynamic material instance from the existing material.
-	UMaterialInstanceDynamic* DynMaterialInstance = UMaterialInstanceDynamic::Create(DecalMaterial, this);
-	if (DynMaterialInstance)
+	if(DecalComponent)
 	{
-		// Apply it to the decal component.
-		DecalComponent->SetMaterial(0, DynMaterialInstance);
+		// Get the existing material from the decal component
+		UMaterialInterface* CurrentMaterial = DecalComponent->GetDecalMaterial();
 
-		// Optionally modify parameters on the dynamic instance.
-		DynMaterialInstance->SetScalarParameterValue(FName(TEXT("Erosion")), 0);
+		// Create a dynamic material instance from the existing material
+		UMaterialInstanceDynamic* DynamicMaterial = UMaterialInstanceDynamic::Create(CurrentMaterial, this);
+
+		// Set the new dynamic material to the decal component
+		DecalComponent->SetDecalMaterial(DynamicMaterial);
+
+		// Set a scalar parameter on the new dynamic material instance
+		DynamicMaterial->SetScalarParameterValue(FName("Erosion"), 0.0f);
 	}
 }
 
