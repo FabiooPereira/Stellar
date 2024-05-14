@@ -8,14 +8,15 @@
 #include "AICompanionController.generated.h"
 
 //Define enum for AI companion states
+UENUM(BlueprintType)
 enum class EAICompanionState : uint8
 {
 	Idle,
 	WanderAround,
-	FollowPlayer,
-	WanderAroundPlayer,
 	Startled,
-	MoveToLocationAndIdleState
+	MoveToLocationAndIdleState,
+	FocusState,
+	MountedState
 };
 
 /**
@@ -35,7 +36,6 @@ public:
 	FTimerHandle RandomMoveTimerHandle;
 	FTimerHandle WanderingTimerHandle;
 	FTimerHandle StartledTimerHandle;
-	FTimerHandle WanderingAroundPlayerTimerHandle;
 	FTimerHandle SetStateHandler;
 
 	
@@ -56,40 +56,33 @@ protected:
 
 public:
 	virtual void Tick(float DeltaTime) override;
+	void HandleCollisionWithPlayer();
 
 	//Functions Player can call for the companion to execute
-	void StopFollowPlayer();
-	void ContinueFollowPlayer();
 	UFUNCTION(BlueprintCallable)
-	void SendToLocation(FVector targetLocation, bool IsButton);
+	void CallToLocation(FVector targetLocation);
 
 	//-------------------------------SetStates----------------------------------//
+	UFUNCTION(BlueprintCallable)
 	void SetState(EAICompanionState NewState);
 	//---------------------------------States-----------------------------------//
 	void IdleState();
 	void WanderState();
-	void FollowPlayerState();
-	void WanderAroundPlayerState();
 	void StartledState();
 	void GoToCommandedTarget();
+	void FocusState();
 	//-------------------------------HelpMethods-------------------------------//
-	void StartWanderAroundPlayer();
 	void StartWandering();
 	void StartIdle();
-	//void SetRandomLocationTimer();
-	void ChooseNewRandomLocation();
+	
 	void WanderNewRandomLocation();
 	void CheckForDarknessOverlap();
 	
 	bool IsRunningAway = false;
-	UPROPERTY(BlueprintReadOnly)
-	bool CallStayToogle = false;
 
 private:
 	void CheckIfShouldFocusPlayer();
-
 	
 	float MaxDistanceAllowedFromPlayer = 600.0f;
 
-	bool bShouldFollowPlayer = true;
 };
