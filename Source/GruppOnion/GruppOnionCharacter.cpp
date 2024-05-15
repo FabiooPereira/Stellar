@@ -134,7 +134,7 @@ void AGruppOnionCharacter::Move(const FInputActionValue& Value)
 
 	if (Controller != nullptr && CustomCamera != nullptr)
 	{
-		FRotator CameraRotation = FollowCamera->GetComponentRotation();
+		FRotator CameraRotation = CustomCamera->GetComponentRotation();
 		//FRotator CameraRotation = CurrentCameraRotation;
 		FVector ForwardDirection =FRotationMatrix(CameraRotation).GetUnitAxis(EAxis::X);
 
