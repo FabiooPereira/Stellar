@@ -35,5 +35,8 @@ public:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 private:
+	float TargetScale = 1.0f;  // The normal scale
+	float CurrentScaleTime = 0.0f;  // Current time in the scaling process
+	float ScaleDuration = 1.0f;  // Duration in seconds to reach the target scale
 
 };
