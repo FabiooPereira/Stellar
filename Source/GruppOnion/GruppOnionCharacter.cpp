@@ -182,7 +182,7 @@ void AGruppOnionCharacter::StayCompanion()
 	}
 	else
 	{
-		UE_LOG(LogTemp,Warning,TEXT("NUllptr"))
+		UE_LOG(LogTemp,Warning,TEXT("NUllptr"));
 	}
 	
 }
