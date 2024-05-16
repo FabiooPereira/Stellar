@@ -121,8 +121,8 @@ void AAICompanionController::GoToCommandedTarget()
 			IsGoingToCommandedTarget=false;
 			if(!GetWorldTimerManager().IsTimerActive(SetStateHandler))
 			{
-				UE_LOG(LogTemp,Warning,TEXT("Transition to Idle timer has been set"));
-				GetWorldTimerManager().SetTimer(SetStateHandler, this,&AAICompanionController::StartIdle, 10,false);
+				//UE_LOG(LogTemp,Warning,TEXT("Transition to Idle timer has been set"));
+				//GetWorldTimerManager().SetTimer(SetStateHandler, this,&AAICompanionController::StartIdle, 10,false);
 			}
 			//CheckIfShouldFocusPlayer();
 		}
