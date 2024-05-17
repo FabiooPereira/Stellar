@@ -30,6 +30,10 @@ public:
 	void InteractGrab(AActor* Instigator);
 	virtual void InteractGrab_Implementation(AActor* GrabInstigator) = 0;
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Push")
+	void InteractPush(AActor* Instigator);
+	virtual void InteractPush_Implementation(AActor* PushInstigator) = 0;
+
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interaction")
 	void ConversationClosed();
 	virtual void ConversationClosed_Implementation() = 0;
