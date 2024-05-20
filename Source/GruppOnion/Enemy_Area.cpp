@@ -51,24 +51,6 @@ void AEnemy_Area::BeginPlay()
 	}
 }
 
-void AEnemy_Area::SpawnDarkness()
-{
-	//RemoveEnemy();
-	// if (DecalComponent)
-	// {
-	// 	DecalComponent->SetVisibility(true);
-	// }
-}
-
-void AEnemy_Area::RemoveDarkness()
-{
-	//SpawnEnemy();
-	// if (DecalComponent)
-	// {
-	// 	DecalComponent->SetVisibility(false);
-	// }
-}
-
 void AEnemy_Area::SpawnEnemy()
 {
 	FRotator RandomRotation(0.0f, FMath::FRandRange(0.0f, 360.0f), 0.0f);
@@ -94,6 +76,11 @@ void AEnemy_Area::RemoveEnemy()
 	} else {
 		UE_LOG(LogTemp, Warning, TEXT("Attempted to remove a non-existent enemy"));
 	}
+}
+
+AEnemy* AEnemy_Area::GetCurrentEnemy() const
+{
+	return CurrentEnemy;
 }
 
 FVector AEnemy_Area::GetRandomPointOnLandscape() const
@@ -135,12 +122,6 @@ FVector AEnemy_Area::GetRandomPointOnLandscape() const
 	//FColor LineColor = bHitSuccess ? FColor::Green : FColor::Red; // Green if hit, red if no hit
 	//DrawDebugLine(World, StartLocation, EndLocation, LineColor, false, 5, 0, 5.0f);
 	
-}
-
-
-
-void AEnemy_Area::SpawnRock()
-{
 }
 
 // Called every frame
