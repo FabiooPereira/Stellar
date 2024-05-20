@@ -53,12 +53,15 @@ void AEnemy_Area::BeginPlay()
 
 void AEnemy_Area::SpawnEnemy()
 {
-	FRotator RandomRotation(0.0f, FMath::FRandRange(0.0f, 360.0f), 0.0f);
-	FVector SpawnLocation = GetRandomPointOnLandscape();
-	
 	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-	CurrentEnemy = GetWorld()->SpawnActor<AEnemy>(Enemy, SpawnLocation, RandomRotation, SpawnParams);
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::DontSpawnIfColliding;
+	do
+	{
+		FRotator RandomRotation(0.0f, FMath::FRandRange(0.0f, 360.0f), 0.0f);
+		FVector SpawnLocation = GetRandomPointOnLandscape();
+		UE_LOG(LogTemp, Warning, TEXT("Try Spawn"));
+		CurrentEnemy = GetWorld()->SpawnActor<AEnemy>(Enemy, SpawnLocation, RandomRotation, SpawnParams);
+	} while (!CurrentEnemy);
 
 		if (CurrentEnemy != nullptr) {
 			UE_LOG(LogTemp, Warning, TEXT("Enemy spawned"));
@@ -81,6 +84,16 @@ void AEnemy_Area::RemoveEnemy()
 AEnemy* AEnemy_Area::GetCurrentEnemy() const
 {
 	return CurrentEnemy;
+}
+
+FVector AEnemy_Area::GetThrowLocation(FVector OriginalVector, FVector EnemyLocation, float RangeFromCenter)
+{
+    FVector DirectionVector = EnemyLocation - OriginalVector;
+    DirectionVector.Normalize();
+	FVector ScaledDirection = DirectionVector * RangeFromCenter;
+	FVector ThrowLocation = OriginalVector + ScaledDirection;
+	
+	return ThrowLocation;
 }
 
 FVector AEnemy_Area::GetRandomPointOnLandscape() const
