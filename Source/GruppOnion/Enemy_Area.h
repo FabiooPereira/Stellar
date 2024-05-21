@@ -26,22 +26,25 @@ protected:
 
 private:
 
-	UFUNCTION(BlueprintCallable, Category="Darkness")
-	void SpawnDarkness();
-	
-	UFUNCTION(BlueprintCallable, Category="Darkness")
-	void RemoveDarkness();
-	
+	// Spawn an enemy
 	UFUNCTION(BlueprintCallable, Category="Enemy")
 	void SpawnEnemy();
-	
+
+	// Remove the current enemy spawned
 	UFUNCTION(BlueprintCallable, Category="Enemy")
 	void RemoveEnemy();
+
+	//Return the current enemy spawned
+	UFUNCTION(BlueprintCallable, Category="Enemy")
+	AEnemy* GetCurrentEnemy() const;
+
+	//Reduce the length of a vector by a certain amount
+	UFUNCTION(BlueprintCallable, Category="Vector")
+	FVector GetThrowLocation(FVector OriginalVector, FVector EnemyLocation, float RangeFromCenter);
 	
+	// Get a random point on the landscape using raycast
 	FVector GetRandomPointOnLandscape() const;
-
-	void SpawnRock();
-
+	
 	UPROPERTY(EditAnywhere, Category = "Border Config")
 	float BorderOffset = 50; // Adjust if needed, margin for border margin when spawning 
 
@@ -72,6 +75,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Enemy")
 	TSubclassOf<AEnemy> Enemy;
 
+	UPROPERTY()
 	AEnemy* CurrentEnemy = nullptr;
 
 };
