@@ -18,6 +18,9 @@ struct FNPCData
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int32 InteractionState = 0;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int32 TreeIndex = 0;
 };
 
 
@@ -30,7 +33,7 @@ public:
 
 	// Update the NPC interaction data
 	UFUNCTION(BlueprintCallable, Category = "NPC Interaction")
-	void UpdateNPCData(const FString& NPCName, int32 NewState = 0);
+	void UpdateNPCData(const FString& NPCName, int32 NewState = 0, int32 TreeIndex = 0);
 
 	// Get if the player has talked to the NPC
 	UFUNCTION(BlueprintCallable, Category = "NPC Interaction")
@@ -39,6 +42,9 @@ public:
 	// Get the interaction status of the NPC
 	UFUNCTION(BlueprintCallable, Category = "NPC Interaction")
 	int32 GetInteractionStatus(const FString& NPCName) const;
+
+	UFUNCTION(BlueprintCallable, Category = "NPC Interaction")
+	int32 GetTreeIndex(const FString& NPCName) const;
 
 private:
 
