@@ -43,6 +43,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "NPC Interaction")
 	int32 GetInteractionStatus(const FString& NPCName) const;
 
+	UFUNCTION(BlueprintCallable, Category = "NPC Interaction")
 	int32 GetTreeIndex(const FString& NPCName) const;
 
 private:
