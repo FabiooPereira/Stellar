@@ -3,7 +3,7 @@
 
 #include "Stellar_GameState.h"
 
-void AStellar_GameState::UpdateNPCData(const FString& NPCName, int32 NewState){
+void AStellar_GameState::UpdateNPCData(const FString& NPCName, int32 NewState, int32 TreeIndex ){
 	if (FNPCData* InteractionData = NPCDataMap.Find(NPCName))
 	{
 		// Update existing entry
@@ -15,6 +15,7 @@ void AStellar_GameState::UpdateNPCData(const FString& NPCName, int32 NewState){
 		FNPCData NewInteractionData;
 		NewInteractionData.bHasTalkedTo = true;
 		NewInteractionData.InteractionState = NewState;
+		NewInteractionData.TreeIndex = TreeIndex;
 		NPCDataMap.Add(NPCName, NewInteractionData);
 	}
 }
@@ -33,6 +34,18 @@ int32 AStellar_GameState::GetInteractionStatus(const FString& NPCName) const
 	if(const FNPCData* InteractionData = NPCDataMap.Find(NPCName))
 	{
 		return InteractionData->InteractionState;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+int32 AStellar_GameState::GetTreeIndex(const FString& NPCName) const
+{
+	if(const FNPCData* InteractionData = NPCDataMap.Find(NPCName))
+	{
+		return InteractionData->TreeIndex;
 	}
 	else
 	{
