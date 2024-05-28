@@ -46,6 +46,7 @@ void AAICompanionController::Tick(float DeltaTime)
 		FocusState();
 		break;
 	case EAICompanionState::MountedState:
+		break;
 	default:
 
 		break;
@@ -115,9 +116,9 @@ void AAICompanionController::GoToCommandedTarget()
 {
 	if(IsGoingToCommandedTarget)
 	{
-		if (FVector::Dist(GetPawn()->GetActorLocation(), TargetToStandOn)<200.f)
+		if (FVector::Dist(GetPawn()->GetActorLocation(), TargetToStandOn)<100.f)
 		{
-			
+			UE_LOG(LogTemp,Warning,TEXT("LocationReached"));
 			IsGoingToCommandedTarget=false;
 			if(!GetWorldTimerManager().IsTimerActive(SetStateHandler))
 			{
@@ -128,7 +129,8 @@ void AAICompanionController::GoToCommandedTarget()
 		}
 		return;
 	}
-	MoveToLocation(TargetToStandOn);
+	MoveToLocation(TargetToStandOn, 10.f, false,true
+		,true,true,0,true);
 	IsGoingToCommandedTarget = true;
 	
 }
