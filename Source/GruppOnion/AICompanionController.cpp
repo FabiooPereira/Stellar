@@ -41,7 +41,7 @@ void AAICompanionController::Tick(float DeltaTime)
 		break;
 	case EAICompanionState::MoveToLocationAndIdleState:
 		GoToCommandedTarget();
-		break;
+		break; 
 	case EAICompanionState::FocusState:
 		FocusState();
 		break;
