@@ -24,7 +24,7 @@ void AAICompanionController::BeginPlay()
 void AAICompanionController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	//Checks if Pawn is overlaping with Enemy
+	//Checks if Pawn is overlaping with Enemy	
 	CheckForDarknessOverlap();
 	//HandleCollisionWithPlayer();
 	//StateMachine
